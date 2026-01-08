@@ -1,0 +1,5 @@
+{
+  "name": "gemini-cli",
+  "version": "1.0.0",
+  "description": "Google Gemini CLI를 서브 에이전트로 호출하여 코드 분석/리뷰 수행"
+}

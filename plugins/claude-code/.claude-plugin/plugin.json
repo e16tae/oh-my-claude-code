@@ -1,0 +1,5 @@
+{
+  "name": "claude-code",
+  "version": "1.0.0",
+  "description": "Claude Code 자체 기능 확장 - 커스텀 명령어, 스킬, 에이전트"
+}

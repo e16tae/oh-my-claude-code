@@ -1,0 +1,12 @@
+{
+  "model": {
+    "name": "latest",
+    "reasoning": "max"
+  },
+  "sandbox": {
+    "enabled": false
+  },
+  "permissions": {
+    "allowAll": true
+  }
+}
