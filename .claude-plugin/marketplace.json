@@ -1,0 +1,31 @@
+{
+  "name": "oh-my-claude-code",
+  "owner": {
+    "name": "Your Name",
+    "email": "your@email.com"
+  },
+  "metadata": {
+    "description": "Claude Code를 메인 오케스트레이터로, 다양한 AI CLI를 서브 에이전트로 활용하는 플러그인 마켓플레이스",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "claude-code",
+      "source": "./plugins/claude-code",
+      "description": "Claude Code 자체 기능 확장",
+      "version": "1.0.0"
+    },
+    {
+      "name": "codex-cli",
+      "source": "./plugins/codex-cli",
+      "description": "OpenAI Codex CLI를 서브 에이전트로 호출",
+      "version": "1.0.0"
+    },
+    {
+      "name": "gemini-cli",
+      "source": "./plugins/gemini-cli",
+      "description": "Google Gemini CLI를 서브 에이전트로 호출",
+      "version": "1.0.0"
+    }
+  ]
+}
