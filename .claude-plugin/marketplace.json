@@ -1,31 +1,72 @@
 {
+  "$schema": "../schemas/marketplace-v2.schema.json",
+  "schemaVersion": "2.0.0",
   "name": "oh-my-claude-code",
   "owner": {
-    "name": "Your Name",
-    "email": "your@email.com"
+    "name": "oh-my-claude-code",
+    "url": "https://github.com/oh-my-claude-code"
   },
   "metadata": {
     "description": "Claude Code를 메인 오케스트레이터로, 다양한 AI CLI를 서브 에이전트로 활용하는 플러그인 마켓플레이스",
-    "version": "1.0.0"
+    "version": "2.0.0",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/oh-my-claude-code/oh-my-claude-code.git"
+    }
+  },
+  "registry": {
+    "primary": "https://registry.oh-my-claude-code.dev",
+    "mirrors": [],
+    "cache": {
+      "enabled": true,
+      "ttl": 3600,
+      "directory": "~/.cache/oh-my-claude-code"
+    }
   },
   "plugins": [
     {
       "name": "claude-code",
       "source": "./plugins/claude-code",
       "description": "Claude Code 자체 기능 확장 - 오케스트레이션, 상태 관리",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "author": "oh-my-claude-code",
+      "license": "MIT",
+      "categories": ["orchestration", "utility"],
+      "keywords": ["claude", "orchestrator", "agent", "core"],
+      "enabled": true,
+      "pinned": false
     },
     {
       "name": "codex-cli",
       "source": "./plugins/codex-cli",
       "description": "OpenAI Codex CLI를 서브 에이전트로 호출",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "author": "oh-my-claude-code",
+      "license": "MIT",
+      "categories": ["ai-agent", "code-generation"],
+      "keywords": ["codex", "openai", "code-generation"],
+      "enabled": true,
+      "pinned": false
     },
     {
       "name": "gemini-cli",
       "source": "./plugins/gemini-cli",
       "description": "Google Gemini CLI를 서브 에이전트로 호출",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "author": "oh-my-claude-code",
+      "license": "MIT",
+      "categories": ["ai-agent", "code-review"],
+      "keywords": ["gemini", "google", "code-review"],
+      "enabled": true,
+      "pinned": false
     }
-  ]
+  ],
+  "installedPlugins": [],
+  "settings": {
+    "autoUpdate": false,
+    "verifySignatures": true,
+    "allowUnsigned": true,
+    "trustList": ["oh-my-claude-code"]
+  }
 }

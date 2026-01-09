@@ -1,5 +1,35 @@
 {
+  "$schema": "../../../schemas/plugin-v2.schema.json",
+  "schemaVersion": "2.0.0",
   "name": "gemini-cli",
+  "version": "1.0.0",
   "description": "Google Gemini CLI를 서브 에이전트로 호출하여 코드 분석/리뷰 수행",
-  "version": "1.0.0"
+  "author": {
+    "name": "oh-my-claude-code",
+    "url": "https://github.com/oh-my-claude-code"
+  },
+  "license": "MIT",
+  "keywords": ["gemini", "google", "code-review", "ai-agent", "analysis"],
+  "categories": ["ai-agent", "code-review"],
+  "engines": {
+    "claude-code": ">=1.0.0"
+  },
+  "dependencies": {
+    "claude-code": "^1.0.0"
+  },
+  "compatibility": {
+    "platforms": ["darwin", "linux", "win32"],
+    "minClaudeCodeVersion": "1.0.0"
+  },
+  "permissions": {
+    "required": ["Bash", "Read"],
+    "optional": ["Write", "WebSearch"]
+  },
+  "exports": {
+    "commands": ["commands/*.md"],
+    "skills": ["skills/*/SKILL.md"],
+    "agents": ["agents/*.md"],
+    "hooks": ["hooks/hooks.json"],
+    "config": ["config/default.jsonc"]
+  }
 }

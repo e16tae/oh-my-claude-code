@@ -1,0 +1,198 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oh-my-claude-code.dev/schema/marketplace/v2.json",
+  "title": "Claude Code Marketplace Schema v2",
+  "description": "Schema for marketplace manifest with registry support and plugin metadata",
+  "type": "object",
+  "required": ["name", "metadata", "plugins"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "const": "2.0.0",
+      "description": "Schema version identifier"
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Marketplace name"
+    },
+    "owner": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "url": { "type": "string", "format": "uri" }
+      },
+      "required": ["name"],
+      "description": "Marketplace owner information"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "description": { "type": "string" },
+        "version": { "type": "string" },
+        "license": { "type": "string" },
+        "homepage": { "type": "string", "format": "uri" },
+        "repository": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string" },
+            "url": { "type": "string", "format": "uri" }
+          }
+        }
+      },
+      "required": ["description", "version"],
+      "description": "Marketplace metadata"
+    },
+    "registry": {
+      "type": "object",
+      "properties": {
+        "primary": {
+          "type": "string",
+          "format": "uri",
+          "description": "Primary registry URL"
+        },
+        "mirrors": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" },
+          "description": "Mirror registry URLs"
+        },
+        "cache": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "ttl": { "type": "integer", "default": 3600, "description": "Cache TTL in seconds" },
+            "directory": { "type": "string", "description": "Cache directory path" }
+          }
+        }
+      },
+      "description": "Registry configuration"
+    },
+    "plugins": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "source", "version"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$",
+            "description": "Plugin name"
+          },
+          "source": {
+            "type": "string",
+            "description": "Plugin source (local path, registry name, or URL)"
+          },
+          "description": {
+            "type": "string",
+            "description": "Brief plugin description"
+          },
+          "version": {
+            "type": "string",
+            "description": "Installed version"
+          },
+          "author": {
+            "type": "string",
+            "description": "Plugin author"
+          },
+          "license": {
+            "type": "string",
+            "description": "SPDX license identifier"
+          },
+          "homepage": {
+            "type": "string",
+            "format": "uri",
+            "description": "Plugin homepage"
+          },
+          "categories": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Plugin categories"
+          },
+          "keywords": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Search keywords"
+          },
+          "enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether plugin is enabled"
+          },
+          "pinned": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether version is pinned (no auto-update)"
+          }
+        }
+      },
+      "description": "Installed plugins list"
+    },
+    "installedPlugins": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "version", "installedAt"],
+        "properties": {
+          "name": { "type": "string" },
+          "version": { "type": "string" },
+          "source": {
+            "type": "string",
+            "enum": ["local", "registry", "github", "url"],
+            "description": "Installation source type"
+          },
+          "sourceUrl": {
+            "type": "string",
+            "description": "Original source URL or path"
+          },
+          "installedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Installation timestamp"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update timestamp"
+          },
+          "integrity": {
+            "type": "string",
+            "description": "Integrity hash at installation time"
+          }
+        }
+      },
+      "description": "Detailed installed plugins information"
+    },
+    "settings": {
+      "type": "object",
+      "properties": {
+        "autoUpdate": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable automatic plugin updates"
+        },
+        "verifySignatures": {
+          "type": "boolean",
+          "default": true,
+          "description": "Verify plugin signatures on install"
+        },
+        "allowUnsigned": {
+          "type": "boolean",
+          "default": false,
+          "description": "Allow installation of unsigned plugins"
+        },
+        "trustList": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of trusted authors/publishers"
+        }
+      },
+      "description": "Marketplace settings"
+    }
+  },
+  "additionalProperties": false
+}

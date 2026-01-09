@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oh-my-claude-code.dev/schema/registry/v1.json",
+  "title": "Claude Code Plugin Registry Index Schema v1",
+  "description": "Schema for plugin registry index",
+  "type": "object",
+  "required": ["name", "version", "plugins"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "name": {
+      "type": "string",
+      "description": "Registry name"
+    },
+    "version": {
+      "type": "string",
+      "description": "Registry index version"
+    },
+    "updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last update timestamp"
+    },
+    "plugins": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["name", "description", "versions", "latest"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Plugin name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Plugin description"
+          },
+          "author": {
+            "type": "string",
+            "description": "Plugin author"
+          },
+          "license": {
+            "type": "string",
+            "description": "SPDX license identifier"
+          },
+          "homepage": {
+            "type": "string",
+            "format": "uri",
+            "description": "Plugin homepage"
+          },
+          "repository": {
+            "type": "string",
+            "format": "uri",
+            "description": "Source repository URL"
+          },
+          "categories": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Plugin categories"
+          },
+          "keywords": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Search keywords"
+          },
+          "versions": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "required": ["tarball", "integrity"],
+              "properties": {
+                "releaseDate": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Release date"
+                },
+                "tarball": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "Download URL for tarball"
+                },
+                "integrity": {
+                  "type": "string",
+                  "description": "Integrity hash"
+                },
+                "signature": {
+                  "type": "string",
+                  "description": "GPG signature"
+                },
+                "dependencies": {
+                  "type": "object",
+                  "additionalProperties": { "type": "string" },
+                  "description": "Plugin dependencies"
+                },
+                "engines": {
+                  "type": "object",
+                  "properties": {
+                    "claude-code": { "type": "string" }
+                  },
+                  "description": "Engine requirements"
+                },
+                "deprecated": {
+                  "oneOf": [
+                    { "type": "boolean" },
+                    { "type": "string" }
+                  ],
+                  "description": "Deprecation status"
+                }
+              }
+            },
+            "description": "Available versions"
+          },
+          "latest": {
+            "type": "string",
+            "description": "Latest stable version"
+          },
+          "deprecated": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether plugin is deprecated"
+          },
+          "downloads": {
+            "type": "object",
+            "properties": {
+              "total": { "type": "integer" },
+              "weekly": { "type": "integer" },
+              "monthly": { "type": "integer" }
+            },
+            "description": "Download statistics"
+          }
+        }
+      },
+      "description": "Plugin registry entries"
+    },
+    "categories": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "count": { "type": "integer" }
+        }
+      },
+      "description": "Category definitions"
+    }
+  },
+  "additionalProperties": false
+}

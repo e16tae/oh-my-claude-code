@@ -1,5 +1,32 @@
 {
+  "$schema": "../../../schemas/plugin-v2.schema.json",
+  "schemaVersion": "2.0.0",
   "name": "claude-code",
+  "version": "1.0.0",
   "description": "Claude Code 자체 기능 확장 - 오케스트레이션, 상태 관리, 업데이트",
-  "version": "1.0.0"
+  "author": {
+    "name": "oh-my-claude-code",
+    "url": "https://github.com/oh-my-claude-code"
+  },
+  "license": "MIT",
+  "keywords": ["claude", "orchestrator", "agent", "core"],
+  "categories": ["orchestration", "utility"],
+  "engines": {
+    "claude-code": ">=1.0.0"
+  },
+  "compatibility": {
+    "platforms": ["darwin", "linux", "win32"],
+    "minClaudeCodeVersion": "1.0.0"
+  },
+  "permissions": {
+    "required": ["Bash", "Read", "Write"],
+    "optional": ["WebSearch", "WebFetch"]
+  },
+  "exports": {
+    "commands": ["commands/*.md"],
+    "skills": ["skills/*/SKILL.md"],
+    "agents": ["agents/*.md"],
+    "hooks": ["hooks/hooks.json"],
+    "config": ["config/default.json"]
+  }
 }
