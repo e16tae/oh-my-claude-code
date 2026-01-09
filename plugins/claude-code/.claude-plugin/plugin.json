@@ -1,5 +1,77 @@
 {
   "name": "claude-code",
   "version": "1.0.0",
-  "description": "Claude Code 자체 기능 확장 - 커스텀 명령어, 스킬, 에이전트"
+  "description": "Claude Code 자체 기능 확장 - 오케스트레이션, 상태 관리, 업데이트",
+
+  "commands": {
+    "orchestrate": {
+      "description": "여러 AI CLI를 조합하여 복합 작업 수행",
+      "file": "../commands/orchestrate.md",
+      "usage": "/orchestrate \"[워크플로우 설명]\"",
+      "examples": [
+        "/orchestrate \"codex로 코드 생성 → gemini로 리뷰\"",
+        "/orchestrate \"gemini로 분석 → codex로 수정\""
+      ]
+    },
+    "status": {
+      "description": "서브 에이전트 상태 및 설정 확인",
+      "file": "../commands/status.md",
+      "usage": "/status",
+      "examples": [
+        "/status"
+      ]
+    },
+    "update": {
+      "description": "서브 에이전트 CLI 도구 업데이트",
+      "file": "../commands/update.md",
+      "usage": "/update [에이전트명]",
+      "examples": [
+        "/update codex",
+        "/update gemini",
+        "/update all"
+      ]
+    }
+  },
+
+  "skills": {
+    "orchestrator": {
+      "description": "AI CLI 오케스트레이션 스킬",
+      "file": "../skills/orchestrator/SKILL.md",
+      "triggers": [
+        "파이프라인으로",
+        "순차적으로",
+        "조합해서",
+        "연결해서",
+        "체이닝",
+        "워크플로우"
+      ]
+    }
+  },
+
+  "agents": {
+    "coordinator": {
+      "description": "멀티 에이전트 작업 조율",
+      "file": "../agents/coordinator.md",
+      "capabilities": ["orchestration", "pipeline", "parallel-execution"]
+    }
+  },
+
+  "hooks": {
+    "file": "../hooks/hooks.json"
+  },
+
+  "config": {
+    "file": "../config/default.json"
+  },
+
+  "subagents": {
+    "codex-cli": {
+      "plugin": "../codex-cli",
+      "role": "code-generation"
+    },
+    "gemini-cli": {
+      "plugin": "../gemini-cli",
+      "role": "code-analysis"
+    }
+  }
 }

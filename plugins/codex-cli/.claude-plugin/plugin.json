@@ -1,5 +1,68 @@
 {
   "name": "codex-cli",
   "version": "1.0.0",
-  "description": "OpenAI Codex CLI를 서브 에이전트로 호출하여 코드 생성/완성 수행"
+  "description": "OpenAI Codex CLI를 서브 에이전트로 호출하여 코드 생성/완성 수행",
+
+  "commands": {
+    "codex:generate": {
+      "description": "Codex CLI로 코드 생성",
+      "file": "../commands/generate.md",
+      "usage": "/codex:generate [설명] [--lang=언어]",
+      "examples": [
+        "/codex:generate \"JWT 인증 미들웨어\" --lang=typescript",
+        "/codex:generate \"정렬 알고리즘\""
+      ]
+    },
+    "codex:complete": {
+      "description": "Codex CLI로 코드 완성",
+      "file": "../commands/complete.md",
+      "usage": "/codex:complete [파일경로] [--context=라인수]",
+      "examples": [
+        "/codex:complete src/utils.ts",
+        "/codex:complete ./handler.py --context=50"
+      ]
+    }
+  },
+
+  "skills": {
+    "codex-agent": {
+      "description": "Codex CLI를 활용한 코드 생성 전문 스킬",
+      "file": "../skills/codex-agent/SKILL.md",
+      "triggers": [
+        "codex로",
+        "codex를 활용해",
+        "codex한테",
+        "codex 써서",
+        "codex에게 시켜",
+        "codex가 해줘",
+        "codex로 만들어",
+        "OpenAI codex",
+        "코덱스로",
+        "코덱스 활용"
+      ]
+    }
+  },
+
+  "agents": {
+    "codex-generator": {
+      "description": "Codex CLI 코드 생성 에이전트",
+      "file": "../agents/codex-generator.md",
+      "capabilities": ["code-generation", "code-completion", "refactoring"]
+    }
+  },
+
+  "hooks": {
+    "file": "../hooks/hooks.json"
+  },
+
+  "config": {
+    "file": "../config/default.jsonc"
+  },
+
+  "cli": {
+    "command": "codex",
+    "subcommand": "exec",
+    "requiredVersion": ">=1.0.0",
+    "installUrl": "https://github.com/openai/codex-cli"
+  }
 }

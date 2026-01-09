@@ -1,5 +1,67 @@
 {
   "name": "gemini-cli",
   "version": "1.0.0",
-  "description": "Google Gemini CLI를 서브 에이전트로 호출하여 코드 분석/리뷰 수행"
+  "description": "Google Gemini CLI를 서브 에이전트로 호출하여 코드 분석/리뷰 수행",
+
+  "commands": {
+    "gemini:review": {
+      "description": "Gemini CLI로 코드 리뷰",
+      "file": "../commands/review.md",
+      "usage": "/gemini:review [파일/디렉토리] [--focus=보안|성능|품질]",
+      "examples": [
+        "/gemini:review src/auth.ts --focus=보안",
+        "/gemini:review . --focus=품질"
+      ]
+    },
+    "gemini:analyze": {
+      "description": "Gemini CLI로 코드 분석",
+      "file": "../commands/analyze.md",
+      "usage": "/gemini:analyze [파일/디렉토리] [--depth=surface|standard|deep]",
+      "examples": [
+        "/gemini:analyze src/ --depth=deep",
+        "/gemini:analyze ./utils.ts"
+      ]
+    }
+  },
+
+  "skills": {
+    "gemini-agent": {
+      "description": "Gemini CLI를 활용한 코드 분석/리뷰 전문 스킬",
+      "file": "../skills/gemini-agent/SKILL.md",
+      "triggers": [
+        "gemini로",
+        "gemini를 활용해",
+        "gemini한테",
+        "gemini 써서",
+        "gemini에게 물어봐",
+        "gemini가 분석해",
+        "gemini로 리뷰해",
+        "Google gemini",
+        "제미나이로",
+        "제미나이 활용"
+      ]
+    }
+  },
+
+  "agents": {
+    "gemini-reviewer": {
+      "description": "Gemini CLI 코드 분석/리뷰 에이전트",
+      "file": "../agents/gemini-reviewer.md",
+      "capabilities": ["code-review", "security-analysis", "performance-analysis", "architecture-review"]
+    }
+  },
+
+  "hooks": {
+    "file": "../hooks/hooks.json"
+  },
+
+  "config": {
+    "file": "../config/default.jsonc"
+  },
+
+  "cli": {
+    "command": "gemini",
+    "requiredVersion": ">=1.0.0",
+    "installUrl": "https://github.com/google-gemini/gemini-cli"
+  }
 }
