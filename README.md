@@ -86,14 +86,33 @@ oh-my-claude-code/
 
 ## 설치 방법
 
-1. 저장소 클론
+### 1. Marketplace 등록
 ```bash
-git clone https://github.com/your-username/oh-my-claude-code.git
+/plugin marketplace add your-username/oh-my-claude-code
 ```
 
-2. Claude Code에서 플러그인 디렉토리로 등록
+### 2. 플러그인 설치
 ```bash
-# Claude Code 설정에서 플러그인 경로 추가
+# 개별 플러그인 설치
+/plugin install codex-cli@oh-my-claude-code
+/plugin install gemini-cli@oh-my-claude-code
+/plugin install claude-code@oh-my-claude-code
+
+# 또는 로컬에서 테스트
+/plugin marketplace add ./
+/plugin install codex-cli@oh-my-claude-code
+```
+
+### 3. 바로 사용
+설치 후 자연어로 바로 사용할 수 있습니다:
+```
+"codex로 피보나치 함수 만들어줘"
+"gemini로 이 코드 리뷰해줘"
+```
+
+### Marketplace 업데이트
+```bash
+/plugin marketplace update
 ```
 
 ## 명령어
