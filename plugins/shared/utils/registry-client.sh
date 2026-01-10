@@ -69,7 +69,7 @@ cache_get() {
     return 1
 }
 
-# 캐시에 저장
+# 캐시에 저장 (원자적 쓰기 + JSON 검증)
 # @param $1 - 캐시 키
 # @param $2 - 내용
 cache_set() {
@@ -77,9 +77,32 @@ cache_set() {
     local content="$2"
     local cache_file="$CACHE_DIR/$key"
 
+    # JSON 파일인 경우 유효성 검증
+    if [[ "$key" == *.json ]]; then
+        if ! echo "$content" | jq empty 2>/dev/null; then
+            log_error "Invalid JSON content, refusing to cache: $key"
+            return 1
+        fi
+    fi
+
     mkdir -p "$(dirname "$cache_file")"
-    echo "$content" > "$cache_file"
-    log_debug "Cache set: $key"
+
+    # 원자적 쓰기: 임시 파일에 쓰고 이동
+    local temp_file
+    temp_file=$(mktemp "${cache_file}.XXXXXX") || {
+        log_error "Failed to create temp file for cache"
+        return 1
+    }
+
+    if echo "$content" > "$temp_file"; then
+        mv -f "$temp_file" "$cache_file"
+        log_debug "Cache set: $key"
+        return 0
+    else
+        rm -f "$temp_file"
+        log_error "Failed to write cache: $key"
+        return 1
+    fi
 }
 
 # 캐시 무효화
@@ -128,6 +151,19 @@ registry_get_index() {
     fi
 }
 
+# 문자열 이스케이프 (jq 인젝션 방지)
+# @param $1 - 이스케이프할 문자열
+escape_jq_string() {
+    local str="$1"
+    # 백슬래시, 따옴표, 제어문자 이스케이프
+    str="${str//\\/\\\\}"
+    str="${str//\"/\\\"}"
+    str="${str//$'\n'/\\n}"
+    str="${str//$'\r'/\\r}"
+    str="${str//$'\t'/\\t}"
+    echo "$str"
+}
+
 # 플러그인 검색
 # @param $1 - 검색어
 # @param $2 - (선택) 카테고리 필터
@@ -143,15 +179,21 @@ registry_search() {
     local index
     index=$(registry_get_index) || return 1
 
+    # 검색어 이스케이프 (jq 인젝션 방지)
+    local safe_query
+    safe_query=$(escape_jq_string "$query")
+    local safe_category
+    safe_category=$(escape_jq_string "$category")
+
     # jq로 검색 수행
     local filter=".plugins | to_entries | map(select("
-    filter+=".value.name | test(\"$query\"; \"i\")"
-    filter+=" or .value.description | test(\"$query\"; \"i\")"
-    filter+=" or (.value.keywords // [] | any(. | test(\"$query\"; \"i\")))"
+    filter+=".value.name | test(\"$safe_query\"; \"i\")"
+    filter+=" or .value.description | test(\"$safe_query\"; \"i\")"
+    filter+=" or (.value.keywords // [] | any(. | test(\"$safe_query\"; \"i\")))"
     filter+="))"
 
     if [[ -n "$category" ]]; then
-        filter+=" | map(select(.value.categories // [] | any(. == \"$category\")))"
+        filter+=" | map(select(.value.categories // [] | any(. == \"$safe_category\")))"
     fi
 
     filter+=" | .[0:$limit] | map(.value)"
@@ -332,8 +374,8 @@ registry_download() {
 
     mkdir -p "$output_dir"
 
-    # 다운로드
-    if curl -L -o "$output_file" --progress-bar "$url" 2>/dev/null; then
+    # 다운로드 (타임아웃 설정: 연결 10초, 전체 5분)
+    if curl -L -o "$output_file" --progress-bar --connect-timeout 10 --max-time 300 "$url" 2>/dev/null; then
         # 무결성 검증
         local expected_hash
         expected_hash=$(registry_get_integrity "$plugin_name" "$version")

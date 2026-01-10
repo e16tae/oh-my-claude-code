@@ -248,8 +248,10 @@ resolve_install_order() {
 # 토폴로지 정렬 (DFS)
 _topological_sort() {
     local node="$1"
-    local -n _visited=$2
-    local -n _in_stack=$3
+    local visited_name="$2"
+    local in_stack_name="$3"
+    local -n _visited="$visited_name"
+    local -n _in_stack="$in_stack_name"
 
     # 순환 의존성 검사
     if [[ "${_in_stack[$node]:-}" == "true" ]]; then
@@ -272,7 +274,8 @@ _topological_sort() {
 
         for dep in $deps; do
             if [[ -n "$dep" ]]; then
-                _topological_sort "$dep" _visited _in_stack || return 1
+                # 원본 변수 이름을 전달 (nameref 이름이 아닌)
+                _topological_sort "$dep" "$visited_name" "$in_stack_name" || return 1
             fi
         done
     fi

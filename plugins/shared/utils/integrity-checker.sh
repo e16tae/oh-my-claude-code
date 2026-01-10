@@ -295,14 +295,27 @@ generate_checksums() {
 
     log_info "Generating checksums for $plugin_dir..."
 
-    find "$plugin_dir" -type f \
+    # 원자적 쓰기: 임시 파일에 먼저 쓰고 이동
+    local temp_file
+    temp_file=$(mktemp "${output}.XXXXXX") || {
+        log_error "Failed to create temp file for checksums"
+        return 1
+    }
+
+    if find "$plugin_dir" -type f \
         ! -path "*/.git/*" \
         ! -path "*/node_modules/*" \
         ! -name "checksums.txt" \
         -exec shasum -a 256 {} \; 2>/dev/null | \
-        sort > "$output"
+        sort > "$temp_file"; then
 
-    log_info "Checksums saved to: $output"
+        mv -f "$temp_file" "$output"
+        log_info "Checksums saved to: $output"
+    else
+        rm -f "$temp_file"
+        log_error "Failed to generate checksums"
+        return 1
+    fi
     echo "$output"
 }
 

@@ -219,8 +219,27 @@ github_clone_plugin() {
 
     log_info "Cloning: $owner/$repo@$ref"
 
-    # 이미 존재하면 삭제
-    rm -rf "$dest"
+    # 이미 존재하면 삭제 (안전 검사 포함)
+    if [[ -e "$dest" ]]; then
+        # 안전 검사: 경로 검증
+        local real_dest real_output_dir
+        real_dest=$(cd "$dest" 2>/dev/null && pwd) || real_dest="$dest"
+        real_output_dir=$(cd "$output_dir" 2>/dev/null && pwd) || real_output_dir="$output_dir"
+
+        # 상위 디렉토리가 output_dir인지 확인
+        if [[ "$real_dest" != "$real_output_dir"/* ]]; then
+            log_error "Security: refusing to delete path outside output_dir: $dest"
+            return 1
+        fi
+
+        # 위험 경로 체크
+        if [[ "$real_dest" == "/" ]] || [[ "$real_dest" == "$HOME" ]] || [[ -z "$real_dest" ]]; then
+            log_error "Security: refusing to delete dangerous path: $dest"
+            return 1
+        fi
+
+        rm -rf "$dest"
+    fi
 
     # shallow clone
     if git clone --depth 1 --branch "$ref" "$clone_url" "$dest" 2>/dev/null; then
