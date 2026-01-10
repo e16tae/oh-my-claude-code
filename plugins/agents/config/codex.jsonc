@@ -1,0 +1,7 @@
+{
+  // Codex CLI 설정
+  "model": "gpt-5.2-codex",
+  "reasoningEffort": "high",
+  "sandbox": "workspace-write",
+  "approval": "on-failure"
+}

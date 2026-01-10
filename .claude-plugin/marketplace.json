@@ -26,40 +26,16 @@
   },
   "plugins": [
     {
-      "name": "claude-code",
-      "source": "./plugins/claude-code",
-      "description": "Claude Code 자체 기능 확장 - 오케스트레이션, 상태 관리",
+      "name": "agents",
+      "source": "./plugins/agents",
+      "description": "여러 AI CLI 도구를 통합하는 플러그인",
       "version": "1.0.0",
       "author": "oh-my-claude-code",
       "license": "MIT",
-      "categories": ["orchestration", "utility"],
-      "keywords": ["claude", "orchestrator", "agent", "core"],
+      "categories": ["orchestration", "ai-agent"],
+      "keywords": ["multi-agent", "codex", "gemini", "cli"],
       "enabled": true,
-      "pinned": false
-    },
-    {
-      "name": "codex-cli",
-      "source": "./plugins/codex-cli",
-      "description": "OpenAI Codex CLI를 서브 에이전트로 호출",
-      "version": "1.0.0",
-      "author": "oh-my-claude-code",
-      "license": "MIT",
-      "categories": ["ai-agent", "code-generation"],
-      "keywords": ["codex", "openai", "code-generation"],
-      "enabled": true,
-      "pinned": false
-    },
-    {
-      "name": "gemini-cli",
-      "source": "./plugins/gemini-cli",
-      "description": "Google Gemini CLI를 서브 에이전트로 호출",
-      "version": "1.0.0",
-      "author": "oh-my-claude-code",
-      "license": "MIT",
-      "categories": ["ai-agent", "code-review"],
-      "keywords": ["gemini", "google", "code-review"],
-      "enabled": true,
-      "pinned": false
+      "pinned": true
     }
   ],
   "installedPlugins": [],
