@@ -1,7 +1,23 @@
 {
   // Codex CLI 설정
+  // 모델: gpt-5.2-codex (최신), gpt-5.1-codex-max, gpt-5.1-codex-mini
   "model": "gpt-5.2-codex",
-  "reasoningEffort": "high",
-  "sandbox": "workspace-write",
-  "approval": "on-failure"
+
+  // Reasoning Effort: none, low, medium, high, xhigh
+  // xhigh: 최대 추론 깊이 (복잡한 코딩 작업에 최적)
+  "reasoningEffort": "xhigh",
+
+  // 샌드박스: read-only, workspace-write, danger-full-access
+  // danger-full-access: 전체 시스템 접근 (최대 자율성)
+  "sandbox": "danger-full-access",
+
+  // 승인 정책: untrusted, on-failure, on-request, never
+  "approval": "never",
+
+  // 전체 자동화 모드
+  "fullAuto": true,
+
+  // 웹 검색: 기본 비활성화 (Claude가 필요시 --search 플래그 추가)
+  // 활성화 시점: 최신 문서, API 레퍼런스, 외부 정보 필요 시
+  "search": false
 }

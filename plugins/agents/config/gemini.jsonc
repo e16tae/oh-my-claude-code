@@ -1,5 +1,16 @@
 {
   // Gemini CLI 설정
-  "model": "gemini-2.5-pro",
-  "sandbox": true
+  // 모델: gemini-3-pro (최대 추론), gemini-3-flash, gemini-2.5-pro
+  "model": "gemini-3-pro",
+
+  // Thinking Level (Gemini 3): minimal, low, medium, high
+  // high: 최대 추론 깊이
+  "thinkingLevel": "high",
+
+  // 출력 형식: text, json, stream-json
+  // text: Claude가 자연어로 이해하기 용이 (기본값)
+  "outputFormat": "text",
+
+  // 권한 프롬프트 우회: 자동 실행
+  "yolo": true
 }
