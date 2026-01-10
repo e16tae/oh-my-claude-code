@@ -31,6 +31,24 @@ log_warn() {
     echo -e "${YELLOW}[WARN]${NC} $1" >&2
 }
 
+# JSON 문자열 이스케이프
+# @param $1 - 이스케이프할 문자열
+json_escape() {
+    local str="$1"
+    # jq를 사용하여 안전하게 JSON 문자열 생성
+    if command -v jq &>/dev/null; then
+        printf '%s' "$str" | jq -Rs '.'
+    else
+        # jq 없으면 수동 이스케이프
+        str="${str//\\/\\\\}"      # 백슬래시
+        str="${str//\"/\\\"}"      # 따옴표
+        str="${str//$'\n'/\\n}"    # 줄바꿈
+        str="${str//$'\r'/\\r}"    # 캐리지 리턴
+        str="${str//$'\t'/\\t}"    # 탭
+        echo "\"$str\""
+    fi
+}
+
 # 1. 프로젝트 타입 감지
 detect_project_type() {
     if [[ -f "$PROJECT_ROOT/package.json" ]]; then
@@ -317,21 +335,48 @@ PACKAGE_MANAGER=$(detect_package_manager)
 DEPENDENCIES=$(collect_dependencies)
 STRUCTURE=$(collect_structure)
 
-# JSON 출력 생성
-cat > "$OUTPUT_FILE" << EOF
+# JSON 출력 생성 (jq를 사용한 안전한 생성)
+if command -v jq &>/dev/null; then
+    jq -n \
+        --arg project_type "$PROJECT_TYPE" \
+        --arg language_version "$LANGUAGE_VERSION" \
+        --arg framework "$FRAMEWORK" \
+        --arg package_manager "$PACKAGE_MANAGER" \
+        --arg test_framework "$TEST_FRAMEWORK" \
+        --arg conventions "$CONVENTIONS" \
+        --arg patterns "$PATTERNS" \
+        --argjson dependencies "$DEPENDENCIES" \
+        --argjson structure "$STRUCTURE" \
+        --arg collected_at "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
+        '{
+            project_type: $project_type,
+            language_version: $language_version,
+            framework: $framework,
+            package_manager: $package_manager,
+            test_framework: $test_framework,
+            conventions: $conventions,
+            patterns: $patterns,
+            dependencies: $dependencies,
+            structure: $structure,
+            collected_at: $collected_at
+        }' > "$OUTPUT_FILE"
+else
+    # jq 없으면 수동 이스케이프 사용
+    cat > "$OUTPUT_FILE" << EOF
 {
-  "project_type": "$PROJECT_TYPE",
-  "language_version": "$LANGUAGE_VERSION",
-  "framework": "$FRAMEWORK",
-  "package_manager": "$PACKAGE_MANAGER",
-  "test_framework": "$TEST_FRAMEWORK",
-  "conventions": "$CONVENTIONS",
-  "patterns": "$PATTERNS",
+  "project_type": $(json_escape "$PROJECT_TYPE"),
+  "language_version": $(json_escape "$LANGUAGE_VERSION"),
+  "framework": $(json_escape "$FRAMEWORK"),
+  "package_manager": $(json_escape "$PACKAGE_MANAGER"),
+  "test_framework": $(json_escape "$TEST_FRAMEWORK"),
+  "conventions": $(json_escape "$CONVENTIONS"),
+  "patterns": $(json_escape "$PATTERNS"),
   "dependencies": $DEPENDENCIES,
   "structure": $STRUCTURE,
   "collected_at": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 }
 EOF
+fi
 
 log_info "Context saved to: $OUTPUT_FILE"
 

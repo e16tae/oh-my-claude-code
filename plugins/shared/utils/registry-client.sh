@@ -231,7 +231,7 @@ registry_get_plugin() {
     index=$(registry_get_index) || return 1
 
     local plugin_info
-    plugin_info=$(echo "$index" | jq -r ".plugins[\"$plugin_name\"] // empty" 2>/dev/null)
+    plugin_info=$(echo "$index" | jq -r --arg name "$plugin_name" '.plugins[$name] // empty' 2>/dev/null)
 
     if [[ -n "$plugin_info" ]] && [[ "$plugin_info" != "null" ]]; then
         cache_set "plugins/$plugin_name.json" "$plugin_info"
@@ -306,7 +306,7 @@ registry_get_download_url() {
     fi
 
     local tarball
-    tarball=$(echo "$plugin_info" | jq -r ".versions[\"$version\"].tarball // empty" 2>/dev/null)
+    tarball=$(echo "$plugin_info" | jq -r --arg ver "$version" '.versions[$ver].tarball // empty' 2>/dev/null)
 
     if [[ -n "$tarball" ]]; then
         echo "$tarball"
@@ -329,7 +329,7 @@ registry_get_integrity() {
     plugin_info=$(registry_get_plugin "$plugin_name") || return 1
 
     local integrity
-    integrity=$(echo "$plugin_info" | jq -r ".versions[\"$version\"].integrity // empty" 2>/dev/null)
+    integrity=$(echo "$plugin_info" | jq -r --arg ver "$version" '.versions[$ver].integrity // empty' 2>/dev/null)
 
     if [[ -n "$integrity" ]]; then
         echo "$integrity"

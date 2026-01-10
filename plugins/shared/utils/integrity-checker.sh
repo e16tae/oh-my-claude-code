@@ -98,6 +98,39 @@ verify_hash() {
     fi
 }
 
+# Hex 문자열을 Base64로 변환 (xxd, openssl, 또는 순수 bash 사용)
+# @param $1 - hex 문자열
+hex_to_base64() {
+    local hex="$1"
+
+    # 방법 1: xxd 사용 (가장 일반적)
+    if command -v xxd &>/dev/null; then
+        echo "$hex" | xxd -r -p | base64
+        return 0
+    fi
+
+    # 방법 2: openssl 사용
+    if command -v openssl &>/dev/null; then
+        echo "$hex" | openssl enc -hex -d 2>/dev/null | base64
+        return 0
+    fi
+
+    # 방법 3: python 사용
+    if command -v python3 &>/dev/null; then
+        python3 -c "import base64,sys; print(base64.b64encode(bytes.fromhex(sys.argv[1])).decode())" "$hex"
+        return 0
+    fi
+
+    # 방법 4: perl 사용
+    if command -v perl &>/dev/null; then
+        echo "$hex" | perl -pe 's/([0-9a-f]{2})/chr(hex($1))/gie' | base64
+        return 0
+    fi
+
+    log_error "No hex-to-base64 converter available (need xxd, openssl, python3, or perl)"
+    return 1
+}
+
 # SRI (Subresource Integrity) 형식 해시 생성
 # @param $1 - 파일 경로
 # @param $2 - 알고리즘 (sha256, sha384, sha512)
@@ -111,16 +144,16 @@ generate_sri_hash() {
         return 1
     fi
 
-    local hash_binary
+    local hex_hash hash_base64
     case "$algorithm" in
         sha256)
-            hash_binary=$(shasum -a 256 "$file_path" | cut -d' ' -f1 | xxd -r -p | base64)
+            hex_hash=$(shasum -a 256 "$file_path" | cut -d' ' -f1)
             ;;
         sha384)
-            hash_binary=$(shasum -a 384 "$file_path" | cut -d' ' -f1 | xxd -r -p | base64)
+            hex_hash=$(shasum -a 384 "$file_path" | cut -d' ' -f1)
             ;;
         sha512)
-            hash_binary=$(shasum -a 512 "$file_path" | cut -d' ' -f1 | xxd -r -p | base64)
+            hex_hash=$(shasum -a 512 "$file_path" | cut -d' ' -f1)
             ;;
         *)
             log_error "Unsupported algorithm: $algorithm"
@@ -128,7 +161,8 @@ generate_sri_hash() {
             ;;
     esac
 
-    echo "${algorithm}-${hash_binary}"
+    hash_base64=$(hex_to_base64 "$hex_hash") || return 1
+    echo "${algorithm}-${hash_base64}"
 }
 
 # SRI 형식 해시 검증
