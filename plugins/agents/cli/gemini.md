@@ -21,10 +21,10 @@ gemini -p "<prompt>" \
 
 | 모델 | 설명 |
 |------|------|
-| gemini-3-pro | 고도로 복잡한 추론 (권장) |
-| gemini-3-flash | Pro급 추론, Flash급 속도 |
+| gemini-3-pro-preview | 고도로 복잡한 추론 (권장) |
 | gemini-2.5-pro | 1M 토큰 컨텍스트 |
 | gemini-2.5-flash | 하이브리드 추론 모델 |
+| gemini-2.0-flash | 빠른 응답 모델 |
 
 ## 옵션 설명
 
@@ -50,7 +50,7 @@ gemini -p "<prompt>" \
 ```bash
 # 최고 추론 모델로 실행
 gemini -p "Review this code for potential issues" \
-  -m gemini-3-pro
+  -m gemini-3-pro-preview
 
 # JSON 출력
 gemini -p "Analyze the architecture" \
