@@ -1,20 +1,9 @@
 {
-  "$schema": "../../schemas/plugin-v2.schema.json",
-  "schemaVersion": "2.0.0",
   "name": "agents",
   "version": "1.0.0",
-  "description": "Claude Code에서 여러 AI CLI 도구를 통합하는 플러그인",
-  "author": { "name": "oh-my-claude-code" },
-  "license": "MIT",
-  "keywords": ["multi-agent", "codex", "gemini", "cli"],
-  "categories": ["ai-agent", "utility"],
-  "permissions": {
-    "required": ["Bash", "Read", "Write"],
-    "optional": ["WebSearch", "WebFetch"]
-  },
-  "exports": {
-    "skills": ["skills/*/SKILL.md"],
-    "agents": ["cli/*.md"],
-    "config": ["config/*.jsonc"]
+  "description": "Claude Code에서 여러 AI CLI 도구(Codex, Gemini)를 통합하는 플러그인",
+  "author": {
+    "name": "oh-my-claude-code",
+    "email": "oh-my-claude-code@github.com"
   }
 }

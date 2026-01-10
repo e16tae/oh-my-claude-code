@@ -1,48 +1,22 @@
 {
-  "$schema": "../schemas/marketplace-v2.schema.json",
-  "schemaVersion": "2.0.0",
   "name": "oh-my-claude-code",
+  "description": "Claude Code를 메인 오케스트레이터로, 다양한 AI CLI를 서브 에이전트로 활용하는 플러그인 마켓플레이스",
   "owner": {
     "name": "oh-my-claude-code",
-    "url": "https://github.com/oh-my-claude-code"
-  },
-  "metadata": {
-    "description": "Claude Code를 메인 오케스트레이터로, 다양한 AI CLI를 서브 에이전트로 활용하는 플러그인 마켓플레이스",
-    "version": "2.0.0",
-    "license": "MIT",
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/oh-my-claude-code/oh-my-claude-code.git"
-    }
-  },
-  "registry": {
-    "primary": "https://registry.oh-my-claude-code.dev",
-    "mirrors": [],
-    "cache": {
-      "enabled": true,
-      "ttl": 3600,
-      "directory": "~/.cache/oh-my-claude-code"
-    }
+    "email": "oh-my-claude-code@github.com"
   },
   "plugins": [
     {
       "name": "agents",
-      "source": "./plugins/agents",
-      "description": "여러 AI CLI 도구를 통합하는 플러그인",
+      "description": "여러 AI CLI 도구(Codex, Gemini)를 통합하는 플러그인",
       "version": "1.0.0",
-      "author": "oh-my-claude-code",
-      "license": "MIT",
-      "categories": ["orchestration", "ai-agent"],
-      "keywords": ["multi-agent", "codex", "gemini", "cli"],
-      "enabled": true,
-      "pinned": true
+      "author": {
+        "name": "oh-my-claude-code",
+        "email": "oh-my-claude-code@github.com"
+      },
+      "source": "./plugins/agents",
+      "category": "development",
+      "homepage": "https://github.com/oh-my-claude-code/oh-my-claude-code"
     }
-  ],
-  "installedPlugins": [],
-  "settings": {
-    "autoUpdate": false,
-    "verifySignatures": true,
-    "allowUnsigned": true,
-    "trustList": ["oh-my-claude-code"]
-  }
+  ]
 }
