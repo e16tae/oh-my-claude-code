@@ -220,6 +220,165 @@ detect_conflicts() {
     echo "$conflicts_json"
 }
 
+# 호환 버전 찾기 헬퍼
+# @param $1 - 의존성 이름
+# @param ... - 버전 범위들
+# @return - 호환 가능한 최신 버전
+find_compatible_version() {
+    local dep_name="$1"
+    shift
+    local ranges=("$@")
+
+    # 레지스트리에서 사용 가능한 버전 목록 가져오기
+    local available_versions
+    if command -v registry_get_versions &>/dev/null; then
+        available_versions=$(registry_get_versions "$dep_name" 2>/dev/null)
+    else
+        log_warn "Registry not available, cannot fetch versions for $dep_name"
+        return 1
+    fi
+
+    if [[ -z "$available_versions" ]]; then
+        log_warn "No versions found for $dep_name"
+        return 1
+    fi
+
+    # 버전을 내림차순 정렬 (최신 버전 우선)
+    local sorted_versions
+    if command -v semver_sort &>/dev/null; then
+        sorted_versions=$(echo "$available_versions" | tr ' ' '\n' | tac)
+    else
+        sorted_versions=$(echo "$available_versions" | tr ' ' '\n' | sort -rV)
+    fi
+
+    # 모든 범위를 만족하는 최신 버전 찾기
+    for version in $sorted_versions; do
+        local satisfies_all=true
+
+        for range in "${ranges[@]}"; do
+            if command -v semver_satisfies &>/dev/null; then
+                if ! semver_satisfies "$version" "$range" 2>/dev/null; then
+                    satisfies_all=false
+                    break
+                fi
+            else
+                # semver_satisfies 없으면 단순 비교
+                if [[ "$version" != "$range" ]] && [[ "$range" != "*" ]]; then
+                    satisfies_all=false
+                    break
+                fi
+            fi
+        done
+
+        if [[ "$satisfies_all" == "true" ]]; then
+            echo "$version"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+# 버전 충돌 해결
+# @param $1 - 플러그인 이름 (선택, 없으면 전체)
+# @return - JSON 해결 결과
+resolve_conflicts() {
+    local target="${1:-}"
+
+    log_info "Resolving dependency conflicts..."
+
+    # 1. 충돌 감지
+    local conflicts
+    conflicts=$(detect_conflicts)
+
+    if [[ "$conflicts" == "[]" ]] || [[ -z "$conflicts" ]]; then
+        log_info "No conflicts to resolve"
+        echo '{"resolved": true, "actions": []}'
+        return 0
+    fi
+
+    local actions="["
+    local first=true
+    local unresolved=0
+
+    # 2. 각 충돌에 대해 해결책 찾기
+    local dep_names
+    dep_names=$(echo "$conflicts" | jq -r '.[].dependency // empty' 2>/dev/null | sort -u)
+
+    for dep_name in $dep_names; do
+        if [[ -z "$dep_name" ]]; then
+            continue
+        fi
+
+        # 해당 의존성의 모든 범위 수집
+        local ranges_json
+        ranges_json=$(echo "$conflicts" | jq -r --arg d "$dep_name" '[.[] | select(.dependency == $d) | .ranges[]] | unique | .[]' 2>/dev/null)
+
+        local ranges=()
+        while IFS= read -r range; do
+            if [[ -n "$range" ]]; then
+                ranges+=("$range")
+            fi
+        done <<< "$ranges_json"
+
+        if [[ ${#ranges[@]} -eq 0 ]]; then
+            continue
+        fi
+
+        log_debug "Finding compatible version for $dep_name with ranges: ${ranges[*]}"
+
+        # 모든 범위를 만족하는 버전 찾기
+        local resolved_version
+        resolved_version=$(find_compatible_version "$dep_name" "${ranges[@]}")
+
+        if [[ -n "$resolved_version" ]]; then
+            [[ "$first" == "true" ]] || actions+=","
+            first=false
+
+            # JSON 안전하게 생성
+            local action_json
+            action_json=$(jq -n \
+                --arg dep "$dep_name" \
+                --arg action "upgrade" \
+                --arg version "$resolved_version" \
+                --argjson ranges "$(printf '%s\n' "${ranges[@]}" | jq -R . | jq -s .)" \
+                '{dependency: $dep, action: $action, version: $version, satisfies: $ranges}')
+
+            actions+="$action_json"
+            log_info "Resolved $dep_name -> $resolved_version (satisfies: ${ranges[*]})"
+        else
+            [[ "$first" == "true" ]] || actions+=","
+            first=false
+
+            # 해결 불가능한 경우
+            local action_json
+            action_json=$(jq -n \
+                --arg dep "$dep_name" \
+                --arg action "manual" \
+                --argjson ranges "$(printf '%s\n' "${ranges[@]}" | jq -R . | jq -s .)" \
+                '{dependency: $dep, action: $action, version: null, requires: $ranges, message: "No compatible version found, manual intervention required"}')
+
+            actions+="$action_json"
+            log_warn "Cannot auto-resolve $dep_name (ranges: ${ranges[*]})"
+            ((unresolved++))
+        fi
+    done
+
+    actions+="]"
+
+    # 최종 결과 JSON 생성
+    local resolved="true"
+    if [[ $unresolved -gt 0 ]]; then
+        resolved="false"
+    fi
+
+    jq -n \
+        --argjson resolved "$resolved" \
+        --argjson unresolved "$unresolved" \
+        --argjson actions "$actions" \
+        '{resolved: $resolved, unresolved_count: $unresolved, actions: $actions}'
+}
+
 # 설치 순서 결정 (토폴로지 정렬)
 # @param $1 - 설치할 플러그인 이름
 # @return - 설치 순서 (공백 구분)
@@ -438,6 +597,8 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     echo "Functions available:"
     echo "  build_dep_graph <plugin>          - Build dependency graph"
     echo "  detect_conflicts                  - Detect version conflicts"
+    echo "  resolve_conflicts                 - Resolve version conflicts"
+    echo "  find_compatible_version <dep>     - Find compatible version"
     echo "  resolve_install_order <plugin>    - Get installation order"
     echo "  print_dep_tree <plugin>           - Print dependency tree"
     echo "  find_reverse_deps <plugin>        - Find reverse dependencies"

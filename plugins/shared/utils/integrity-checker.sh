@@ -396,6 +396,86 @@ verify_checksums() {
     fi
 }
 
+# 설치 전 플러그인 검증 (--verify 옵션용)
+# @param $1 - 플러그인 디렉토리 또는 tarball
+# @param $2 - 서명 파일 경로 (선택)
+# @return - 0 (검증 성공), 1 (실패)
+verify_plugin_for_install() {
+    local plugin_path="$1"
+    local sig_file="${2:-}"
+
+    log_info "Verifying plugin for installation: $plugin_path"
+
+    # tarball인 경우 확장자 체크
+    local is_tarball=false
+    if [[ "$plugin_path" == *.tar.gz ]] || [[ "$plugin_path" == *.tgz ]]; then
+        is_tarball=true
+    fi
+
+    # 1. 파일/디렉토리 존재 확인
+    if [[ "$is_tarball" == "true" ]]; then
+        if [[ ! -f "$plugin_path" ]]; then
+            log_error "Tarball not found: $plugin_path"
+            return 1
+        fi
+    else
+        if [[ ! -d "$plugin_path" ]]; then
+            log_error "Plugin directory not found: $plugin_path"
+            return 1
+        fi
+    fi
+
+    # 2. 무결성 검증 (디렉토리인 경우)
+    if [[ "$is_tarball" == "false" ]]; then
+        if ! verify_plugin_integrity "$plugin_path"; then
+            log_error "Integrity verification failed"
+            return 1
+        fi
+    fi
+
+    # 3. 서명 파일 검증
+    local sig_checked=false
+
+    # 명시적으로 제공된 서명 파일
+    if [[ -n "$sig_file" ]] && [[ -f "$sig_file" ]]; then
+        if ! verify_signature "$plugin_path" "$sig_file"; then
+            log_error "Signature verification failed"
+            return 1
+        fi
+        log_info "Signature verified successfully"
+        sig_checked=true
+    fi
+
+    # 기본 서명 파일 (.sig 확장자)
+    if [[ "$sig_checked" == "false" ]] && [[ -f "${plugin_path}.sig" ]]; then
+        if ! verify_signature "$plugin_path" "${plugin_path}.sig"; then
+            log_error "Signature verification failed"
+            return 1
+        fi
+        log_info "Signature verified successfully"
+        sig_checked=true
+    fi
+
+    # 기본 서명 파일 (.asc 확장자)
+    if [[ "$sig_checked" == "false" ]] && [[ -f "${plugin_path}.asc" ]]; then
+        if ! verify_signature "$plugin_path" "${plugin_path}.asc"; then
+            log_error "Signature verification failed"
+            return 1
+        fi
+        log_info "Signature verified successfully"
+        sig_checked=true
+    fi
+
+    # 서명 파일이 없는 경우 경고
+    if [[ "$sig_checked" == "false" ]]; then
+        log_warn "No signature file found, skipping signature verification"
+        log_warn "Consider using signed plugins for better security"
+    fi
+
+    log_info "Plugin verification passed"
+    return 0
+}
+
 # 직접 실행시 테스트
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     echo "integrity-checker.sh - Utility functions"
@@ -408,6 +488,7 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     echo "  verify_signature <file> <sig>     - Verify GPG signature"
     echo "  create_signature <file> [output]  - Create GPG signature"
     echo "  verify_plugin_integrity <dir>     - Verify plugin integrity"
+    echo "  verify_plugin_for_install <path>  - Verify before install (--verify)"
     echo "  generate_checksums <dir>          - Generate checksum file"
     echo "  verify_checksums <file>           - Verify checksum file"
     echo ""

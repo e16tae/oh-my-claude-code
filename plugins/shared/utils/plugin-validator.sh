@@ -375,12 +375,149 @@ validate_hooks() {
     return 0
 }
 
+# 기본 plugin.json 템플릿 생성
+# @param $1 - 플러그인 디렉토리
+create_default_plugin_json() {
+    local plugin_dir="$1"
+    local plugin_name
+    plugin_name=$(basename "$plugin_dir")
+    local plugin_json="$plugin_dir/.claude-plugin/plugin.json"
+
+    mkdir -p "$plugin_dir/.claude-plugin"
+
+    cat > "$plugin_json" << EOF
+{
+  "\$schema": "../../../schemas/plugin-v2.schema.json",
+  "schemaVersion": "2.0.0",
+  "name": "$plugin_name",
+  "version": "1.0.0",
+  "description": "Plugin description",
+  "author": {
+    "name": "your-name",
+    "url": "https://github.com/your-username"
+  },
+  "license": "MIT",
+  "keywords": [],
+  "categories": ["utility"],
+  "permissions": {
+    "required": ["Read"],
+    "optional": []
+  },
+  "exports": {
+    "commands": ["commands/*.md"],
+    "skills": ["skills/*/SKILL.md"],
+    "agents": ["agents/*.md"],
+    "hooks": ["hooks/hooks.json"],
+    "config": ["config/default.json"]
+  }
+}
+EOF
+    log_info "Created default plugin.json"
+}
+
+# Markdown 파일에 frontmatter 추가
+# @param $1 - 마크다운 파일 경로
+add_frontmatter() {
+    local file_path="$1"
+    local filename
+    filename=$(basename "$file_path" .md)
+
+    # 이미 frontmatter가 있으면 스킵
+    if head -1 "$file_path" | grep -q "^---$"; then
+        return 0
+    fi
+
+    local temp_file
+    temp_file=$(mktemp)
+
+    cat > "$temp_file" << EOF
+---
+name: $filename
+description: Description for $filename
+---
+
+EOF
+    cat "$file_path" >> "$temp_file"
+    mv "$temp_file" "$file_path"
+    log_info "Added frontmatter to: $file_path"
+}
+
+# 플러그인 자동 수정
+# @param $1 - 플러그인 디렉토리
+# @return - 수정된 항목 수
+fix_plugin() {
+    local plugin_dir="$1"
+    local fixed=0
+
+    echo ""
+    echo "========================================"
+    echo "  Auto-fixing Plugin"
+    echo "  Path: $plugin_dir"
+    echo "========================================"
+    echo ""
+
+    # 1. 필수 디렉토리 생성
+    for dir in commands skills agents hooks config; do
+        if [[ ! -d "$plugin_dir/$dir" ]]; then
+            mkdir -p "$plugin_dir/$dir"
+            log_info "Created directory: $dir/"
+            ((fixed++))
+        fi
+    done
+
+    # 2. .claude-plugin 디렉토리 생성
+    if [[ ! -d "$plugin_dir/.claude-plugin" ]]; then
+        mkdir -p "$plugin_dir/.claude-plugin"
+        log_info "Created directory: .claude-plugin/"
+        ((fixed++))
+    fi
+
+    # 3. plugin.json 없으면 기본 템플릿 생성
+    if [[ ! -f "$plugin_dir/.claude-plugin/plugin.json" ]]; then
+        create_default_plugin_json "$plugin_dir"
+        ((fixed++))
+    fi
+
+    # 4. hooks.json 없으면 기본 생성
+    if [[ ! -f "$plugin_dir/hooks/hooks.json" ]]; then
+        echo '{"hooks": []}' > "$plugin_dir/hooks/hooks.json"
+        log_info "Created default hooks/hooks.json"
+        ((fixed++))
+    fi
+
+    # 5. 명령어 파일에 frontmatter 없으면 추가
+    if [[ -d "$plugin_dir/commands" ]]; then
+        for cmd_file in "$plugin_dir/commands"/*.md 2>/dev/null; do
+            if [[ -f "$cmd_file" ]]; then
+                if ! head -1 "$cmd_file" | grep -q "^---$"; then
+                    add_frontmatter "$cmd_file"
+                    ((fixed++))
+                fi
+            fi
+        done
+    fi
+
+    echo ""
+    echo "========================================"
+    echo "  Fix Summary: $fixed items fixed"
+    echo "========================================"
+    echo ""
+
+    return 0
+}
+
 # 전체 플러그인 검증
 # @param $1 - 플러그인 디렉토리
-# @param $2 - 옵션 (--strict, --report)
+# @param $2 - 옵션 (--strict, --report, --fix)
 validate_plugin() {
     local plugin_dir="$1"
     local option="${2:-}"
+
+    # --fix 모드: 먼저 자동 수정 후 검증
+    if [[ "$option" == "--fix" ]]; then
+        fix_plugin "$plugin_dir"
+        option=""  # 수정 후 일반 검증
+    fi
 
     reset_counters
 
@@ -467,15 +604,17 @@ validate_plugin() {
 # 직접 실행시
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     if [[ $# -lt 1 ]]; then
-        echo "Usage: $0 <plugin-directory> [--strict|--report]"
+        echo "Usage: $0 <plugin-directory> [--strict|--report|--fix]"
         echo ""
         echo "Options:"
         echo "  --strict    Treat warnings as errors"
         echo "  --report    Generate detailed report"
+        echo "  --fix       Auto-fix common issues before validation"
         echo ""
         echo "Example:"
         echo "  $0 ./plugins/codex-cli"
         echo "  $0 ./plugins/codex-cli --strict"
+        echo "  $0 ./plugins/codex-cli --fix"
         exit 1
     fi
 
