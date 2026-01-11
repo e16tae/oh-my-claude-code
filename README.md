@@ -96,8 +96,6 @@ oh-my-claude-code/
 │   │   └── config/
 │   │       ├── codex.jsonc       # Codex 설정
 │   │       └── gemini.jsonc      # Gemini 설정
-│   └── shared/
-│       └── utils/                # 공유 유틸리티
 ├── README.md
 └── LICENSE
 ```
@@ -161,36 +159,6 @@ oh-my-claude-code/
   "outputFormat": "text",
   "yolo": true
 }
-```
-
-## Shared 유틸리티
-
-`plugins/shared/utils/` 디렉토리에 공유 유틸리티가 포함되어 있습니다.
-
-### plugin-validator.sh
-플러그인 구조와 보안을 검증합니다.
-
-```bash
-source plugins/shared/utils/plugin-validator.sh
-validate_plugin ./plugins/agents --strict
-```
-
-### version-resolver.sh
-Semver 버전을 해석하고 비교합니다.
-
-```bash
-source plugins/shared/utils/version-resolver.sh
-semver_compare "1.2.0" "1.10.0"   # -1
-semver_satisfies "1.5.0" "^1.0.0" # 0 (true)
-```
-
-### integrity-checker.sh
-플러그인 무결성을 검증합니다.
-
-```bash
-source plugins/shared/utils/integrity-checker.sh
-generate_hash /path/to/file
-verify_hash /path/to/file expected_hash
 ```
 
 ## 기여 방법
