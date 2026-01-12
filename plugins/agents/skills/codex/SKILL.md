@@ -28,7 +28,6 @@ codex exec \
   --sandbox danger-full-access \
   -c approval=never \
   -c reasoningEffort=xhigh \
-  -C <작업_디렉토리> \
   "<프롬프트>"
 ```
 
@@ -48,19 +47,17 @@ codex exec \
 | `-s, --sandbox` | read-only, workspace-write, danger-full-access | 샌드박스 정책 |
 | `-c approval=` | untrusted, on-failure, on-request, never | 승인 정책 |
 | `-c reasoningEffort=` | none, low, medium, high, xhigh | 추론 깊이 |
-| `-C, --cd` | path | 작업 디렉토리 |
 | `--search` | - | 웹 검색 활성화 |
 
 ## 사용 예시
 
 ```bash
-# 권장: 모든 설정 적용
+# 기본 실행
 codex exec \
   --model gpt-5.2-codex \
   --sandbox danger-full-access \
   -c approval=never \
   -c reasoningEffort=xhigh \
-  -C /path/to/project \
   "Create a REST API for user management"
 
 # 웹 검색 활성화 (최신 문서/API 정보 필요 시)
@@ -70,7 +67,6 @@ codex exec \
   -c approval=never \
   -c reasoningEffort=xhigh \
   --search \
-  -C /path/to/project \
   "Integrate the latest Stripe API"
 ```
 

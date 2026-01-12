@@ -45,7 +45,6 @@ gemini \
 | `-m, --model` | string | 사용할 모델 |
 | `-o, --output-format` | text, json, stream-json | 출력 형식 |
 | `--yolo` | - | 권한 프롬프트 우회 |
-| `--include-directories` | path,path,... | 포함할 디렉토리 |
 
 ## Thinking Level (참고)
 
@@ -59,19 +58,12 @@ gemini \
 ## 사용 예시
 
 ```bash
-# 권장: 모든 설정 적용
+# 기본 실행
 gemini \
   --model gemini-3-pro-preview \
   --output-format text \
   --yolo \
   "Review this code for potential issues"
-
-# 특정 디렉토리 포함
-gemini \
-  --model gemini-3-pro-preview \
-  --include-directories /path/to/project \
-  --yolo \
-  "Analyze the architecture"
 
 # JSON 출력 (파싱 필요 시)
 gemini \
