@@ -3,20 +3,76 @@ name: codex
 description: |
   Codex CLI 호출 스킬.
   트리거: "codex로", "codex 써서", "codex한테"
-allowed-tools: Bash, Read, Write, Glob, Grep
-cli: cli/codex.md
+allowed-tools: Bash
 ---
 
 # Codex Skill
 
-사용자가 "codex로", "codex 써서" 등 명시적으로 요청할 때 활성화됩니다.
+OpenAI Codex CLI를 비인터랙티브 모드로 호출합니다.
 
-## 실행 흐름
+## 기본 설정
 
-1. cli/codex.md에서 호출 형식 확인
-2. config/codex.jsonc에서 파라미터 로드
-3. CLI 실행
-4. 결과 반환
+| 설정 | 값 | CLI 옵션 | 설명 |
+|------|-----|----------|------|
+| model | `gpt-5.2-codex` | `--model` | 가장 진보된 에이전틱 코딩 모델 |
+| sandbox | `danger-full-access` | `--sandbox` | 전체 시스템 접근 (최대 자율성) |
+| approval | `never` | `-c approval=` | 승인 없이 자동 실행 |
+| reasoningEffort | `xhigh` | `-c reasoningEffort=` | 최대 추론 깊이 |
+| search | `false` | `--search` | 웹 검색 (필요시만 활성화) |
+
+## 실행 명령어
+
+```bash
+codex exec \
+  --model gpt-5.2-codex \
+  --sandbox danger-full-access \
+  -c approval=never \
+  -c reasoningEffort=xhigh \
+  -C <작업_디렉토리> \
+  "<프롬프트>"
+```
+
+## 사용 가능 모델
+
+| 모델 | 설명 |
+|------|------|
+| gpt-5.2-codex | 가장 진보된 에이전틱 코딩 모델 (권장) |
+| gpt-5.1-codex-max | 장기 에이전틱 코딩 최적화 |
+| gpt-5.1-codex-mini | 비용 효율적 소형 모델 |
+
+## 옵션 참조
+
+| 옵션 | 값 | 설명 |
+|------|-----|------|
+| `-m, --model` | string | 사용할 모델 |
+| `-s, --sandbox` | read-only, workspace-write, danger-full-access | 샌드박스 정책 |
+| `-c approval=` | untrusted, on-failure, on-request, never | 승인 정책 |
+| `-c reasoningEffort=` | none, low, medium, high, xhigh | 추론 깊이 |
+| `-C, --cd` | path | 작업 디렉토리 |
+| `--search` | - | 웹 검색 활성화 |
+
+## 사용 예시
+
+```bash
+# 권장: 모든 설정 적용
+codex exec \
+  --model gpt-5.2-codex \
+  --sandbox danger-full-access \
+  -c approval=never \
+  -c reasoningEffort=xhigh \
+  -C /path/to/project \
+  "Create a REST API for user management"
+
+# 웹 검색 활성화 (최신 문서/API 정보 필요 시)
+codex exec \
+  --model gpt-5.2-codex \
+  --sandbox danger-full-access \
+  -c approval=never \
+  -c reasoningEffort=xhigh \
+  --search \
+  -C /path/to/project \
+  "Integrate the latest Stripe API"
+```
 
 ## 에러 처리
 
