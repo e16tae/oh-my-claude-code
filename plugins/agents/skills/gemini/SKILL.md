@@ -66,9 +66,10 @@ gemini \
   --yolo \
   "Review this code for potential issues"
 
-# 특정 디렉토리에서 실행
-cd /path/to/project && gemini \
+# 특정 디렉토리 포함
+gemini \
   --model gemini-3-pro-preview \
+  --include-directories /path/to/project \
   --yolo \
   "Analyze the architecture"
 
