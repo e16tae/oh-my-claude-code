@@ -11,9 +11,7 @@ Claude Code를 메인 오케스트레이터로, 다양한 AI CLI를 서브 에�
 ├─────────────────────────────────────────────────────────┤
 │  plugins/                                               │
 │  └── agents/        → Codex, Gemini CLI 통합 플러그인    │
-│      ├── skills/    → 스킬 정의 (트리거 기반 자동 활성화) │
-│      ├── cli/       → CLI 호출 방법 문서                 │
-│      └── config/    → CLI 설정 파일                     │
+│      └── skills/    → 스킬 정의 (설정 + CLI 통합)        │
 └─────────────────────────────────────────────────────────┘
          │                              │
          ▼                              ▼
@@ -84,18 +82,12 @@ oh-my-claude-code/
 ├── .claude-plugin/
 │   └── marketplace.json          # 마켓플레이스 매니페스트
 ├── plugins/
-│   ├── agents/                   # 통합 AI CLI 플러그인
-│   │   ├── .claude-plugin/
-│   │   │   └── plugin.json       # 플러그인 매니페스트
-│   │   ├── skills/
-│   │   │   ├── codex/SKILL.md    # Codex 스킬 정의
-│   │   │   └── gemini/SKILL.md   # Gemini 스킬 정의
-│   │   ├── cli/
-│   │   │   ├── codex.md          # Codex CLI 호출 방법
-│   │   │   └── gemini.md         # Gemini CLI 호출 방법
-│   │   └── config/
-│   │       ├── codex.jsonc       # Codex 설정
-│   │       └── gemini.jsonc      # Gemini 설정
+│   └── agents/                   # 통합 AI CLI 플러그인
+│       ├── .claude-plugin/
+│       │   └── plugin.json       # 플러그인 매니페스트
+│       └── skills/
+│           ├── codex/SKILL.md    # Codex 스킬 (설정 + CLI 통합)
+│           └── gemini/SKILL.md   # Gemini 스킬 (설정 + CLI 통합)
 ├── README.md
 └── LICENSE
 ```
@@ -139,27 +131,24 @@ oh-my-claude-code/
 
 ## 기본 설정
 
-### Codex CLI (`config/codex.jsonc`)
-```jsonc
-{
-  "model": "gpt-5.2-codex",
-  "reasoningEffort": "xhigh",
-  "sandbox": "danger-full-access",
-  "approval": "never",
-  "fullAuto": true,
-  "search": false
-}
-```
+각 스킬의 설정은 SKILL.md에 통합되어 있습니다.
 
-### Gemini CLI (`config/gemini.jsonc`)
-```jsonc
-{
-  "model": "gemini-3-pro-preview",
-  "thinkingLevel": "high",
-  "outputFormat": "text",
-  "yolo": true
-}
-```
+### Codex CLI
+
+| 설정 | 값 | CLI 옵션 |
+|------|-----|----------|
+| model | `gpt-5.2-codex` | `--model` |
+| sandbox | `danger-full-access` | `--sandbox` |
+| approval | `never` | `-c approval=` |
+| reasoningEffort | `xhigh` | `-c reasoningEffort=` |
+
+### Gemini CLI
+
+| 설정 | 값 | CLI 옵션 |
+|------|-----|----------|
+| model | `gemini-3-pro-preview` | `--model` |
+| outputFormat | `text` | `--output-format` |
+| yolo | `true` | `--yolo` |
 
 ## 기여 방법
 
