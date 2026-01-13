@@ -23,7 +23,7 @@ Claude Code를 메인 오케스트레이터로, 다양한 AI CLI를 서브 에�
 
 | 플러그인 | 설명 | 버전 |
 |---------|------|-----|
-| agents | Codex, Gemini CLI 통합 플러그인 | 1.0.0 |
+| agents | Codex, Gemini CLI 통합 플러그인 | 1.1.0 |
 
 ## 자연어 트리거
 
@@ -98,7 +98,7 @@ oh-my-claude-code/
 ```json
 {
   "name": "agents",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Claude Code에서 여러 AI CLI 도구를 통합하는 플러그인",
   "author": {
     "name": "oh-my-claude-code",
@@ -120,7 +120,7 @@ oh-my-claude-code/
     {
       "name": "agents",
       "description": "Codex, Gemini CLI 통합 플러그인",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "author": { "name": "...", "email": "..." },
       "source": "./plugins/agents",
       "category": "development"
