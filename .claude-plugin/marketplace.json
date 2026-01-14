@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "oh-my-claude-code",
-  "description": "Claude Code를 메인 오케스트레이터로, 다양한 AI CLI를 서브 에이전트로 활용하는 플러그인 마켓플레이스. anthropics/claude-plugins-official에서 22개 공식 플러그인을 참조합니다.",
+  "description": "Claude Code를 메인 오케스트레이터로, 다양한 AI CLI를 서브 에이전트로 활용하는 플러그인 마켓플레이스. anthropics/claude-plugins-official에서 20개 공식 플러그인을 참조합니다.",
   "owner": {
     "name": "oh-my-claude-code",
     "email": "oh-my-claude-code@github.com"
@@ -10,7 +10,7 @@
     {
       "name": "agents",
       "description": "여러 AI CLI 도구(Codex, Gemini)를 통합하는 플러그인",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "author": {
         "name": "oh-my-claude-code",
         "email": "oh-my-claude-code@github.com"
@@ -306,38 +306,6 @@
       },
       "category": "development",
       "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/context7",
-      "tags": ["external", "community-managed"]
-    },
-    {
-      "name": "github",
-      "description": "GitHub integration for issues, PRs, and repository management",
-      "author": {
-        "name": "GitHub",
-        "email": "support@github.com"
-      },
-      "source": {
-        "source": "url",
-        "url": "https://github.com/anthropics/claude-plugins-official.git",
-        "path": "external_plugins/github"
-      },
-      "category": "productivity",
-      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/github",
-      "tags": ["external", "community-managed"]
-    },
-    {
-      "name": "greptile",
-      "description": "AI-powered codebase search and understanding",
-      "author": {
-        "name": "Greptile",
-        "email": "support@greptile.com"
-      },
-      "source": {
-        "source": "url",
-        "url": "https://github.com/anthropics/claude-plugins-official.git",
-        "path": "external_plugins/greptile"
-      },
-      "category": "development",
-      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/greptile",
       "tags": ["external", "community-managed"]
     },
     {
