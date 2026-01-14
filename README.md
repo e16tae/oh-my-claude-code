@@ -21,9 +21,47 @@ Claude Code를 메인 오케스트레이터로, 다양한 AI CLI를 서브 에�
 
 ## 플러그인 목록
 
+### 로컬 플러그인
+
 | 플러그인 | 설명 | 버전 |
 |---------|------|-----|
-| agents | Codex, Gemini CLI 통합 플러그인 | 1.1.1 |
+| agents | Codex, Gemini CLI 통합 플러그인 | 1.2.0 |
+
+### 외부 플러그인 참조 (claude-plugins-official)
+
+이 마켓플레이스는 [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official)에서 22개 플러그인을 참조합니다.
+
+#### Anthropic 공식 플러그인 (17개)
+
+| 플러그인 | 설명 | 카테고리 |
+|---------|------|---------|
+| code-review | PR 자동 리뷰 (신뢰도 기반 스코어링) | development |
+| code-simplifier | 코드 단순화 및 리팩토링 | development |
+| commit-commands | Git 커밋 워크플로우 자동화 | development |
+| example-plugin | 플러그인 구조 예시 | development |
+| explanatory-output-style | 교육적 설명 출력 스타일 | productivity |
+| feature-dev | 4단계 기능 개발 워크플로우 | development |
+| frontend-design | 고품질 프론트엔드 UI 생성 | development |
+| hookify | 마크다운 기반 커스텀 훅 생성 | development |
+| kotlin-lsp | Kotlin 언어 서버 | development |
+| plugin-dev | 플러그인 개발 도구 | development |
+| pr-review-toolkit | 6개 전문 PR 리뷰 에이전트 | development |
+| pyright-lsp | Python 언어 서버 (Pyright) | development |
+| ralph-loop | 자율 반복 개발 루프 | development |
+| rust-analyzer-lsp | Rust 언어 서버 | development |
+| security-guidance | 실시간 보안 취약점 탐지 | security |
+| swift-lsp | Swift 언어 서버 | development |
+| typescript-lsp | TypeScript/JavaScript 언어 서버 | development |
+
+#### 커뮤니티 관리 플러그인 (5개)
+
+| 플러그인 | 설명 | 제공 |
+|---------|------|-----|
+| context7 | 버전별 문서 조회 | Upstash |
+| github | GitHub 통합 (이슈, PR 관리) | GitHub |
+| greptile | AI 코드베이스 검색 | Greptile |
+| playwright | 브라우저 자동화/E2E 테스트 | Microsoft |
+| serena | LSP 기반 시맨틱 코드 분석 | Serena |
 
 ## 자연어 트리거
 
@@ -47,8 +85,18 @@ claude plugin marketplace add ./
 ```
 
 ### 2. 플러그인 설치
+
+**로컬 플러그인:**
 ```bash
 claude plugin install agents
+```
+
+**외부 플러그인 (claude-plugins-official 참조):**
+```bash
+claude plugin install code-review
+claude plugin install security-guidance
+claude plugin install typescript-lsp
+# ... 등 22개 외부 플러그인
 ```
 
 ### 3. 플러그인 검증 (선택)

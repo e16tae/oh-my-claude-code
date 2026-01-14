@@ -1,6 +1,7 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "oh-my-claude-code",
-  "description": "Claude Code를 메인 오케스트레이터로, 다양한 AI CLI를 서브 에이전트로 활용하는 플러그인 마켓플레이스",
+  "description": "Claude Code를 메인 오케스트레이터로, 다양한 AI CLI를 서브 에이전트로 활용하는 플러그인 마켓플레이스. anthropics/claude-plugins-official에서 22개 공식 플러그인을 참조합니다.",
   "owner": {
     "name": "oh-my-claude-code",
     "email": "oh-my-claude-code@github.com"
@@ -9,14 +10,367 @@
     {
       "name": "agents",
       "description": "여러 AI CLI 도구(Codex, Gemini)를 통합하는 플러그인",
-      "version": "1.1.1",
+      "version": "1.2.0",
       "author": {
         "name": "oh-my-claude-code",
         "email": "oh-my-claude-code@github.com"
       },
       "source": "./plugins/agents",
       "category": "development",
-      "homepage": "https://github.com/oh-my-claude-code/oh-my-claude-code"
+      "homepage": "https://github.com/oh-my-claude-code/oh-my-claude-code",
+      "tags": ["local"]
+    },
+    {
+      "name": "code-review",
+      "description": "Automated code review for pull requests using multiple specialized agents with confidence-based scoring",
+      "author": {
+        "name": "Anthropic",
+        "email": "support@anthropic.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "plugins/code-review"
+      },
+      "category": "development",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-review",
+      "tags": ["external", "official"]
+    },
+    {
+      "name": "code-simplifier",
+      "description": "Code simplification and refactoring assistant",
+      "author": {
+        "name": "Anthropic",
+        "email": "support@anthropic.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "plugins/code-simplifier"
+      },
+      "category": "development",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-simplifier",
+      "tags": ["external", "official"]
+    },
+    {
+      "name": "commit-commands",
+      "description": "Git commit workflow helpers and conventions",
+      "author": {
+        "name": "Anthropic",
+        "email": "support@anthropic.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "plugins/commit-commands"
+      },
+      "category": "development",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/commit-commands",
+      "tags": ["external", "official"]
+    },
+    {
+      "name": "example-plugin",
+      "description": "Example plugin demonstrating plugin structure and capabilities",
+      "author": {
+        "name": "Anthropic",
+        "email": "support@anthropic.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "plugins/example-plugin"
+      },
+      "category": "development",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/example-plugin",
+      "tags": ["external", "official"]
+    },
+    {
+      "name": "explanatory-output-style",
+      "description": "Output style plugin for explanatory and educational responses",
+      "author": {
+        "name": "Anthropic",
+        "email": "support@anthropic.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "plugins/explanatory-output-style"
+      },
+      "category": "productivity",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/explanatory-output-style",
+      "tags": ["external", "official"]
+    },
+    {
+      "name": "feature-dev",
+      "description": "Feature development workflow assistant with 4-phase guided approach",
+      "author": {
+        "name": "Anthropic",
+        "email": "support@anthropic.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "plugins/feature-dev"
+      },
+      "category": "development",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/feature-dev",
+      "tags": ["external", "official"]
+    },
+    {
+      "name": "frontend-design",
+      "description": "Frontend design and UI development assistant for high-quality interfaces",
+      "author": {
+        "name": "Anthropic",
+        "email": "support@anthropic.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "plugins/frontend-design"
+      },
+      "category": "development",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/frontend-design",
+      "tags": ["external", "official"]
+    },
+    {
+      "name": "hookify",
+      "description": "Create custom hooks preventing unwanted behaviors through markdown-based rule definitions",
+      "author": {
+        "name": "Anthropic",
+        "email": "support@anthropic.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "plugins/hookify"
+      },
+      "category": "development",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/hookify",
+      "tags": ["external", "official"]
+    },
+    {
+      "name": "kotlin-lsp",
+      "description": "Kotlin language server for enhanced code intelligence",
+      "author": {
+        "name": "Anthropic",
+        "email": "support@anthropic.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "plugins/kotlin-lsp"
+      },
+      "category": "development",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/kotlin-lsp",
+      "tags": ["external", "official", "lsp"]
+    },
+    {
+      "name": "plugin-dev",
+      "description": "Plugin development toolkit with 7 expert skills",
+      "author": {
+        "name": "Anthropic",
+        "email": "support@anthropic.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "plugins/plugin-dev"
+      },
+      "category": "development",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/plugin-dev",
+      "tags": ["external", "official"]
+    },
+    {
+      "name": "pr-review-toolkit",
+      "description": "6 specialized review agents for comprehensive PR analysis",
+      "author": {
+        "name": "Anthropic",
+        "email": "support@anthropic.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "plugins/pr-review-toolkit"
+      },
+      "category": "development",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/pr-review-toolkit",
+      "tags": ["external", "official"]
+    },
+    {
+      "name": "pyright-lsp",
+      "description": "Python language server (Pyright) for enhanced code intelligence",
+      "author": {
+        "name": "Anthropic",
+        "email": "support@anthropic.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "plugins/pyright-lsp"
+      },
+      "category": "development",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/pyright-lsp",
+      "tags": ["external", "official", "lsp"]
+    },
+    {
+      "name": "ralph-loop",
+      "description": "Autonomous development loops allowing Claude to iterate and fix its own mistakes",
+      "author": {
+        "name": "Anthropic",
+        "email": "support@anthropic.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "plugins/ralph-loop"
+      },
+      "category": "development",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/ralph-loop",
+      "tags": ["external", "official"]
+    },
+    {
+      "name": "rust-analyzer-lsp",
+      "description": "Rust language server (rust-analyzer) for enhanced code intelligence",
+      "author": {
+        "name": "Anthropic",
+        "email": "support@anthropic.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "plugins/rust-analyzer-lsp"
+      },
+      "category": "development",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/rust-analyzer-lsp",
+      "tags": ["external", "official", "lsp"]
+    },
+    {
+      "name": "security-guidance",
+      "description": "Real-time security vulnerability detection with 9 security patterns",
+      "author": {
+        "name": "Anthropic",
+        "email": "support@anthropic.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "plugins/security-guidance"
+      },
+      "category": "security",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance",
+      "tags": ["external", "official"]
+    },
+    {
+      "name": "swift-lsp",
+      "description": "Swift language server for enhanced code intelligence",
+      "author": {
+        "name": "Anthropic",
+        "email": "support@anthropic.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "plugins/swift-lsp"
+      },
+      "category": "development",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/swift-lsp",
+      "tags": ["external", "official", "lsp"]
+    },
+    {
+      "name": "typescript-lsp",
+      "description": "TypeScript/JavaScript language server for enhanced code intelligence",
+      "author": {
+        "name": "Anthropic",
+        "email": "support@anthropic.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "plugins/typescript-lsp"
+      },
+      "category": "development",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/typescript-lsp",
+      "tags": ["external", "official", "lsp"]
+    },
+    {
+      "name": "context7",
+      "description": "Up-to-date documentation lookup - pull version-specific docs and code examples into your LLM context",
+      "author": {
+        "name": "Upstash",
+        "email": "support@upstash.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "external_plugins/context7"
+      },
+      "category": "development",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/context7",
+      "tags": ["external", "community-managed"]
+    },
+    {
+      "name": "github",
+      "description": "GitHub integration for issues, PRs, and repository management",
+      "author": {
+        "name": "GitHub",
+        "email": "support@github.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "external_plugins/github"
+      },
+      "category": "productivity",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/github",
+      "tags": ["external", "community-managed"]
+    },
+    {
+      "name": "greptile",
+      "description": "AI-powered codebase search and understanding",
+      "author": {
+        "name": "Greptile",
+        "email": "support@greptile.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "external_plugins/greptile"
+      },
+      "category": "development",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/greptile",
+      "tags": ["external", "community-managed"]
+    },
+    {
+      "name": "playwright",
+      "description": "Browser automation and E2E testing with Playwright",
+      "author": {
+        "name": "Microsoft",
+        "email": "playwright@microsoft.com"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "external_plugins/playwright"
+      },
+      "category": "testing",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/playwright",
+      "tags": ["external", "community-managed"]
+    },
+    {
+      "name": "serena",
+      "description": "LSP-powered semantic code analysis for deep code understanding",
+      "author": {
+        "name": "Serena",
+        "email": "support@serena.dev"
+      },
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "external_plugins/serena"
+      },
+      "category": "development",
+      "homepage": "https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/serena",
+      "tags": ["external", "community-managed"]
     }
   ]
 }

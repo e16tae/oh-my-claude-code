@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2025-01-14
+
+### Added
+- claude-plugins-official 외부 플러그인 참조 (22개)
+  - Anthropic 공식 플러그인 17개: code-review, code-simplifier, commit-commands, example-plugin, explanatory-output-style, feature-dev, frontend-design, hookify, kotlin-lsp, plugin-dev, pr-review-toolkit, pyright-lsp, ralph-loop, rust-analyzer-lsp, security-guidance, swift-lsp, typescript-lsp
+  - 커뮤니티 관리 플러그인 5개: context7, github, greptile, playwright, serena
+- marketplace.json에 $schema 참조 추가
+- 플러그인 tags 시스템 (local, external, official, community-managed)
+
 ## [1.1.1] - 2025-01-13
 
 ### Added
