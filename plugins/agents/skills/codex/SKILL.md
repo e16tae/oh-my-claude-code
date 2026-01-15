@@ -13,11 +13,8 @@ description: |
   - 마이그레이션: "버전 올려", "의존성 업데이트", "upgrade", "migrate"
   - CI: "GitHub Actions", "CI 깨짐", "파이프라인 고쳐"
 
-  비권장 상황 (→ Gemini 사용):
-  - 이미지/동영상/PDF 분석
-  - 대규모 파일/변경 범위 (100K+ 토큰)
-  - 외부 출처/웹 검색 필요
-  - PR 리뷰 (읽기 전용 분석)
+  Codex는 범용 에이전트로 분석, 설계, 구현, 리뷰 등 모든 작업을 수행할 수 있습니다.
+  (단, 멀티모달 입력은 Gemini를 사용하세요)
 allowed-tools: Bash
 ---
 
@@ -90,24 +87,23 @@ Codex는 다음 상황에서 자동으로 제안됩니다:
 | GitHub Actions, CI 깨짐 | fix CI, pipeline broken |
 | 릴리스 준비, 버전 태그 | release prep, version tag |
 
-## 비권장 상황 (안티패턴)
+## 작업 영역
 
-| 작업 유형 | 권장 도구 | 이유 |
-|----------|----------|------|
-| 이미지/PDF 분석 | Gemini | Codex는 멀티모달 미지원 |
-| 대규모 파일/변경 범위 | Gemini | Gemini 1M 토큰 지원 |
-| **외부** 출처/웹 검색 | Gemini | Google Search 그라운딩 (내부 리포 검색은 Codex 가능) |
-| **PR 리뷰 (읽기 분석)** | Gemini | Long Context Window 강점 |
-| 단순 설명/질문 | Claude | 실행 불필요 |
-| 설명/보고서 중심 요청 | Gemini | Codex는 실행에 집중 |
+Codex는 **범용 에이전트**로, 구현뿐만 아니라 분석/설계 작업도 수행할 수 있습니다.
 
-## 사용 가능 모델
+**Codex의 강점:**
+- 샌드박스 실행 환경
+- GitHub 통합 (PR 생성, 커밋)
+- 실행-수정-검증 루프
+- 최대 추론 깊이 (xhigh)
 
-| 모델 | 설명 |
-|------|------|
-| gpt-5.2-codex | 가장 진보된 에이전틱 코딩 모델 (권장) |
-| gpt-5.1-codex-max | 장기 에이전틱 코딩 최적화 |
-| gpt-5.1-codex-mini | 비용 효율적 소형 모델 |
+> Codex는 특정 역할에 국한되지 않습니다. 사용자 요청에 따라 분석, 설계, 구현, 리뷰 등 모든 작업을 수행할 수 있습니다.
+
+**참고**: 멀티모달 입력(이미지, PDF 등)은 Codex에서 지원하지 않으므로 Gemini를 사용하세요.
+
+## 모델
+
+**반드시 `gpt-5.2-codex` 모델을 사용합니다.** 다른 모델은 사용하지 않습니다.
 
 ## 옵션 참조
 
@@ -116,7 +112,7 @@ Codex는 다음 상황에서 자동으로 제안됩니다:
 | `-m, --model` | string | 사용할 모델 |
 | `-s, --sandbox` | read-only, workspace-write, danger-full-access | 샌드박스 정책 |
 | `-c approval=` | untrusted, on-failure, on-request, never | 승인 정책 |
-| `-c reasoningEffort=` | none, low, medium, high, xhigh | 추론 깊이 |
+| `-c reasoningEffort=` | xhigh | 추론 깊이 (반드시 xhigh 사용) |
 | `--search` | - | 웹 검색 활성화 |
 
 ## 사용 예시
@@ -140,22 +136,19 @@ codex exec \
   "Integrate the latest Stripe API"
 ```
 
-## 핸드오프 패턴
+## 협업 패턴 (선택적 가이드라인)
 
-> **역할 정의**: Codex = "Builder(구현자)" - 실행-수정-검증 중심
+두 에이전트는 **범용적으로 사용 가능**하며, 아래는 협업이 유용할 수 있는 상황입니다:
 
-### Codex → Gemini
-- 구현 후 문서화가 필요할 때
-- 실행 후 대용량 로그 분석이 필요할 때
-- 실행-수정-검증 루프에서 막혔을 때 (실패 회복)
+### Codex → Gemini (선택적)
+- Codex가 처리할 수 없는 멀티모달 입력이 있을 때
+- 100K+ 토큰 대용량 분석이 필요할 때
 
-### Gemini → Codex
-- 분석/설계 후 구현이 필요할 때
-- 이미지/PDF 디자인을 코드로 구현할 때
-- 검색 조사 후 개발이 필요할 때
+### Gemini → Codex (선택적)
+- Gemini가 처리할 수 없는 샌드박스 실행이 필요할 때
+- Codex의 GitHub 통합이 필요할 때
 
-### 실패 회복 흐름
-Codex 실행 실패 → 에러 로그 수집 → Gemini 로그 분석 → 원인 진단 → Codex 재시도
+> **중요**: 두 에이전트 모두 분석, 설계, 구현, 리뷰 등 모든 작업을 수행할 수 있습니다. 특정 역할에 국한하지 마세요.
 
 ## 에러 처리
 
