@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **memory-loop v1.0.1**: 버그 수정 및 개선
+  - plugin.json Hook 구조 수정 (이중 중첩 제거)
+  - post-tool-use.sh의 jq type 체크 버그 수정
+  - 모든 스크립트에서 plugin.json config 값 동적 로드
+  - 환경변수 fallback 일관성 적용 (CLAUDE_PROJECT_DIR)
+  - jq 문자열 연결 개선 (`--arg` 사용)
+  - 미사용 memory-utils.sh 제거
+
+## [1.3.0] - 2025-01-15
+
+### Added
+- **memory-loop 플러그인**: 무제한 기억력 시스템
+  - Context/Todos/Insights 파일로 메모리 외부화
+  - Claude Code 공식 Hook 시스템 활용 (5개 Hook)
+  - 대량 작업 시 자동 활성화 (키워드 감지, 파일 수 감지)
+  - 컨텍스트 압축 전 경고 및 세션 복구 지원
+- 로컬 플러그인 2개 체제 (agents + memory-loop)
+
 ## [1.2.2] - 2025-01-15
 
 ### Removed

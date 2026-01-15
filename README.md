@@ -26,6 +26,7 @@ Claude Code를 메인 오케스트레이터로, 다양한 AI CLI를 서브 에�
 | 플러그인 | 설명 | 버전 |
 |---------|------|-----|
 | agents | Codex, Gemini CLI 통합 플러그인 | 1.2.2 |
+| memory-loop | 무제한 기억력 시스템 (Context/Todos/Insights 외부화) | 1.0.0 |
 
 ### 외부 플러그인 참조 (claude-plugins-official)
 
@@ -86,6 +87,7 @@ claude plugin marketplace add ./
 **로컬 플러그인:**
 ```bash
 claude plugin install agents
+claude plugin install memory-loop
 ```
 
 **외부 플러그인 (claude-plugins-official 참조):**
@@ -127,12 +129,18 @@ oh-my-claude-code/
 ├── .claude-plugin/
 │   └── marketplace.json          # 마켓플레이스 매니페스트
 ├── plugins/
-│   └── agents/                   # 통합 AI CLI 플러그인
+│   ├── agents/                   # 통합 AI CLI 플러그인
+│   │   ├── .claude-plugin/
+│   │   │   └── plugin.json       # 플러그인 매니페스트
+│   │   └── skills/
+│   │       ├── codex/SKILL.md    # Codex 스킬 (설정 + CLI 통합)
+│   │       └── gemini/SKILL.md   # Gemini 스킬 (설정 + CLI 통합)
+│   └── memory-loop/              # 무제한 기억력 플러그인
 │       ├── .claude-plugin/
-│       │   └── plugin.json       # 플러그인 매니페스트
-│       └── skills/
-│           ├── codex/SKILL.md    # Codex 스킬 (설정 + CLI 통합)
-│           └── gemini/SKILL.md   # Gemini 스킬 (설정 + CLI 통합)
+│       │   └── plugin.json       # 플러그인 매니페스트 + Hook 정의
+│       ├── scripts/              # Hook 스크립트 (5개)
+│       ├── templates/            # 메모리 파일 템플릿
+│       └── lib/                  # 공통 유틸리티
 ├── README.md
 └── LICENSE
 ```

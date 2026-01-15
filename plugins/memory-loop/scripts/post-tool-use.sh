@@ -1,0 +1,88 @@
+#!/bin/bash
+# PostToolUse: Read/Glob/Grep 실행 후 파일 수 카운트
+# Memory Loop Plugin - oh-my-claude-code
+
+set -euo pipefail
+
+# ============================================
+# Config 로드
+# ============================================
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PLUGIN_JSON="$SCRIPT_DIR/../.claude-plugin/plugin.json"
+
+# plugin.json에서 config 읽기
+THRESHOLD=$(jq -r '.config.fileCountThreshold // 10' "$PLUGIN_JSON" 2>/dev/null || echo "10")
+MEMORY_DIR_NAME=$(jq -r '.config.memoryDirectory // ".memory"' "$PLUGIN_JSON" 2>/dev/null || echo ".memory")
+
+# ============================================
+# 환경 설정
+# ============================================
+MEMORY_DIR="${CLAUDE_PROJECT_DIR:-$(pwd)}/$MEMORY_DIR_NAME"
+STATE_FILE="$MEMORY_DIR/.state.json"
+
+# ============================================
+# stdin에서 JSON 입력 읽기
+# ============================================
+INPUT=$(cat)
+
+# 도구 이름 추출
+TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // empty' 2>/dev/null || echo "")
+
+# 이미 활성화되어 있으면 스킵
+if [ -d "$MEMORY_DIR" ]; then
+  exit 0
+fi
+
+# ============================================
+# Glob 결과에서 파일 수 추출
+# ============================================
+if [ "$TOOL_NAME" = "Glob" ]; then
+  # jq로 파일 수 계산 (tool_output의 타입에 따라)
+  FILE_COUNT=$(echo "$INPUT" | jq -r '
+    if .tool_output then
+      if (.tool_output | type) == "array" then (.tool_output | length)
+      elif (.tool_output | type) == "string" then (.tool_output | split("\n") | map(select(length > 0)) | length)
+      else 0
+      end
+    else 0
+    end
+  ' 2>/dev/null || echo "0")
+
+  # 숫자 검증
+  if ! [[ "$FILE_COUNT" =~ ^[0-9]+$ ]]; then
+    FILE_COUNT=0
+  fi
+
+  if [ "$FILE_COUNT" -ge "$THRESHOLD" ]; then
+    # 메모리 시스템 활성화
+    mkdir -p "$MEMORY_DIR"
+
+    # 상태 파일 생성
+    jq -n \
+      --arg trigger "file_count" \
+      --argjson count "$FILE_COUNT" \
+      --argjson threshold "$THRESHOLD" \
+      --arg ts "$(date -Iseconds)" \
+      '{activated: true, trigger: $trigger, file_count: $count, threshold: $threshold, timestamp: $ts}' \
+      > "$STATE_FILE"
+
+    echo ""
+    echo "======================================"
+    echo "  Memory Loop 활성화됨 (파일 수 감지)"
+    echo "======================================"
+    echo ""
+    echo "  파일 ${FILE_COUNT}개가 감지되었습니다."
+    echo "  (임계값: ${THRESHOLD}개)"
+    echo ""
+    echo "  대량 작업입니다."
+    echo "  다음 파일들을 $MEMORY_DIR_NAME/ 에 생성하세요:"
+    echo "    - context.md  : 작업 목표 및 현재 상태"
+    echo "    - todos.md    : 체크리스트"
+    echo "    - insights.md : 발견사항 기록"
+    echo ""
+    echo "======================================"
+    echo ""
+  fi
+fi
+
+exit 0
