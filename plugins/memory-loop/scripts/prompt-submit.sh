@@ -8,11 +8,11 @@ set -euo pipefail
 # Config 로드
 # ============================================
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PLUGIN_JSON="$SCRIPT_DIR/../.claude-plugin/plugin.json"
+CONFIG_FILE="$SCRIPT_DIR/../config.json"
 
-# plugin.json에서 config 읽기
-KEYWORDS=$(jq -r '.config.keywords | join("|")' "$PLUGIN_JSON" 2>/dev/null || echo "")
-MEMORY_DIR_NAME=$(jq -r '.config.memoryDirectory // ".memory"' "$PLUGIN_JSON" 2>/dev/null || echo ".memory")
+# config.json에서 설정 읽기
+KEYWORDS=$(jq -r '.keywords | join("|")' "$CONFIG_FILE" 2>/dev/null || echo "")
+MEMORY_DIR_NAME=$(jq -r '.memoryDirectory // ".memory"' "$CONFIG_FILE" 2>/dev/null || echo ".memory")
 
 # fallback 키워드
 if [ -z "$KEYWORDS" ]; then

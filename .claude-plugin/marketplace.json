@@ -23,7 +23,7 @@
     {
       "name": "memory-loop",
       "description": "무제한 기억력 시스템 - Context/Todos/Insights 파일로 메모리 외부화. 대량 작업 시 자동 활성화.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": {
         "name": "oh-my-claude-code",
         "email": "oh-my-claude-code@github.com"

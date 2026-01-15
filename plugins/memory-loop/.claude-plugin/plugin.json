@@ -1,24 +1,33 @@
 {
   "name": "memory-loop",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "무제한 기억력 시스템 - Context/Todos/Insights 파일로 메모리 외부화. 대량 작업 시 자동 활성화.",
   "author": {
     "name": "oh-my-claude-code",
     "email": "oh-my-claude-code@github.com"
   },
+  "homepage": "https://github.com/e16tae/oh-my-claude-code",
   "hooks": {
     "SessionStart": [
       {
-        "type": "command",
-        "command": "${CLAUDE_PLUGIN_ROOT}/scripts/session-start.sh",
-        "timeout": 10
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/session-start.sh",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
       {
-        "type": "command",
-        "command": "${CLAUDE_PLUGIN_ROOT}/scripts/prompt-submit.sh",
-        "timeout": 5
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/prompt-submit.sh",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -35,33 +44,25 @@
     ],
     "PreCompact": [
       {
-        "type": "command",
-        "command": "${CLAUDE_PLUGIN_ROOT}/scripts/pre-compact.sh",
-        "timeout": 10
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/pre-compact.sh",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "Stop": [
       {
-        "type": "command",
-        "command": "${CLAUDE_PLUGIN_ROOT}/scripts/stop.sh",
-        "timeout": 10
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/stop.sh",
+            "timeout": 10
+          }
+        ]
       }
     ]
-  },
-  "config": {
-    "fileCountThreshold": 10,
-    "keywords": [
-      "전체",
-      "모든",
-      "대량",
-      "all",
-      "entire",
-      "bulk",
-      "migration",
-      "refactor",
-      "리팩토링",
-      "마이그레이션"
-    ],
-    "memoryDirectory": ".memory"
   }
 }

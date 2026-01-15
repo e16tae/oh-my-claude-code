@@ -1,0 +1,16 @@
+{
+  "fileCountThreshold": 10,
+  "keywords": [
+    "전체",
+    "모든",
+    "대량",
+    "all",
+    "entire",
+    "bulk",
+    "migration",
+    "refactor",
+    "리팩토링",
+    "마이그레이션"
+  ],
+  "memoryDirectory": ".memory"
+}

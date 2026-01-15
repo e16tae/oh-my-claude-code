@@ -7,11 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 2025-01-15
+
 ### Fixed
-- **memory-loop v1.0.1**: 버그 수정 및 개선
-  - plugin.json Hook 구조 수정 (이중 중첩 제거)
+- **memory-loop v1.0.2**: plugin.json 스키마 호환성 수정
+  - `config` 키 제거 (Claude Code 스키마에서 미지원)
+  - 별도 `config.json` 파일로 설정 분리
+  - 모든 Hook에 `{ "hooks": [...] }` 래퍼 구조 적용
+  - 스크립트에서 config.json 읽도록 수정
+
+### Fixed (v1.0.1)
+- **memory-loop**: 초기 버그 수정
+  - plugin.json Hook 구조 수정
   - post-tool-use.sh의 jq type 체크 버그 수정
-  - 모든 스크립트에서 plugin.json config 값 동적 로드
   - 환경변수 fallback 일관성 적용 (CLAUDE_PROJECT_DIR)
   - jq 문자열 연결 개선 (`--arg` 사용)
   - 미사용 memory-utils.sh 제거
