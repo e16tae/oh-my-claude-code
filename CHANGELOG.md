@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.2] - 2025-01-15
+
+### Removed
+- serena 플러그인 제거 (외부 참조)
+
+### Changed
+- 외부 플러그인 참조 20개 → 19개로 변경
+
 ## [1.2.1] - 2025-01-14
 
 ### Removed

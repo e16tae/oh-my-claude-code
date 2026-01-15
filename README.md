@@ -25,11 +25,11 @@ Claude Code를 메인 오케스트레이터로, 다양한 AI CLI를 서브 에�
 
 | 플러그인 | 설명 | 버전 |
 |---------|------|-----|
-| agents | Codex, Gemini CLI 통합 플러그인 | 1.2.1 |
+| agents | Codex, Gemini CLI 통합 플러그인 | 1.2.2 |
 
 ### 외부 플러그인 참조 (claude-plugins-official)
 
-이 마켓플레이스는 [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official)에서 20개 플러그인을 참조합니다.
+이 마켓플레이스는 [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official)에서 19개 플러그인을 참조합니다.
 
 #### Anthropic 공식 플러그인 (17개)
 
@@ -53,13 +53,12 @@ Claude Code를 메인 오케스트레이터로, 다양한 AI CLI를 서브 에�
 | swift-lsp | Swift 언어 서버 | development |
 | typescript-lsp | TypeScript/JavaScript 언어 서버 | development |
 
-#### 커뮤니티 관리 플러그인 (3개)
+#### 커뮤니티 관리 플러그인 (2개)
 
 | 플러그인 | 설명 | 제공 |
 |---------|------|-----|
 | context7 | 버전별 문서 조회 | Upstash |
 | playwright | 브라우저 자동화/E2E 테스트 | Microsoft |
-| serena | LSP 기반 시맨틱 코드 분석 | Serena |
 
 ## 자연어 트리거
 
