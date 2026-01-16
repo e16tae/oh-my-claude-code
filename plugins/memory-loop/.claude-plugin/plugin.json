@@ -1,7 +1,7 @@
 {
   "name": "memory-loop",
-  "version": "1.1.0",
-  "description": "무제한 기억력 시스템 - Context/Todos/Insights 파일 자동 생성. 대량 작업 시 자동 활성화.",
+  "version": "1.2.0",
+  "description": "무제한 기억력 시스템 - 완전 자동화. 파일 생성/복구/아카이브 자동 처리.",
   "author": {
     "name": "oh-my-claude-code",
     "email": "oh-my-claude-code@github.com"

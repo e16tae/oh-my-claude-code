@@ -12,5 +12,7 @@
     "리팩토링",
     "마이그레이션"
   ],
-  "memoryDirectory": ".memory"
+  "memoryDirectory": ".memory",
+  "autoArchive": false,
+  "archiveDirectory": ".memory-archive"
 }
