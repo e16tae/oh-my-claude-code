@@ -25,7 +25,7 @@ claude plugin install memory-loop
 
 ### 자동 활성화 조건
 
-플러그인은 다음 조건에서 자동으로 활성화됩니다:
+플러그인은 다음 조건에서 자동으로 활성화되며, **메모리 파일을 자동 생성**합니다:
 
 1. **키워드 감지**: 프롬프트에 대량 작업 키워드 포함 시
    - 한국어: "전체", "모든", "대량", "리팩토링", "마이그레이션"
@@ -33,13 +33,22 @@ claude plugin install memory-loop
 
 2. **파일 수 감지**: Glob 도구로 10개 이상의 파일이 검색될 때
 
+### 자동 파일 생성 (v1.1.0+)
+
+활성화 시 `.memory/` 디렉토리와 함께 다음 파일들이 **자동으로 생성**됩니다:
+- `context.md` - 작업 목표 및 현재 상태
+- `todos.md` - 체크리스트
+- `insights.md` - 발견사항 기록
+
+> 기존 파일이 있으면 덮어쓰지 않습니다.
+
 ### Hook 이벤트
 
 | Hook | 동작 |
 |------|-----|
 | `SessionStart` | 기존 `.memory/` 디렉토리 발견 시 복구 메시지 출력 |
-| `UserPromptSubmit` | 대량 작업 키워드 감지 → 활성화 알림 |
-| `PostToolUse` | Glob 실행 후 파일 수 확인 → 자동 활성화 |
+| `UserPromptSubmit` | 대량 작업 키워드 감지 → **자동 파일 생성** |
+| `PostToolUse` | Glob 실행 후 파일 수 확인 → **자동 파일 생성** |
 | `PreCompact` | 컨텍스트 압축 전 메모리 파일 업데이트 경고 |
 | `Stop` | Claude 응답 완료 시 상태 저장 |
 
@@ -56,10 +65,12 @@ claude plugin install memory-loop
 
   대량 작업 키워드가 감지되었습니다.
 
-  다음 파일들을 .memory/ 에 생성하세요:
+  .memory/ 에 다음 파일들이 자동 생성되었습니다:
     - context.md  : 작업 목표 및 현재 상태
     - todos.md    : 체크리스트
     - insights.md : 발견사항 기록
+
+  [중요] 작업 시작 전 context.md의 Mission을 작성하세요.
 
 ======================================
 ```
@@ -78,11 +89,12 @@ claude plugin install memory-loop
   파일 15개가 감지되었습니다.
   (임계값: 10개)
 
-  대량 작업입니다.
-  다음 파일들을 .memory/ 에 생성하세요:
+  .memory/ 에 다음 파일들이 자동 생성되었습니다:
     - context.md  : 작업 목표 및 현재 상태
     - todos.md    : 체크리스트
     - insights.md : 발견사항 기록
+
+  [중요] 작업 시작 전 context.md의 Mission을 작성하세요.
 
 ======================================
 ```
@@ -135,21 +147,23 @@ claude plugin install memory-loop
 
 ### 1. 자동 활성화 후
 
-플러그인이 활성화되면 `.memory/` 디렉토리가 생성됩니다. 다음 파일들을 생성하세요:
+플러그인이 활성화되면 `.memory/` 디렉토리와 파일들이 **자동으로 생성**됩니다:
 
 ```
 .memory/
-├── context.md    # 작업 목표 및 현재 상태
-├── todos.md      # 체크리스트
-└── insights.md   # 발견사항
+├── context.md    # 작업 목표 및 현재 상태 (자동 생성)
+├── todos.md      # 체크리스트 (자동 생성)
+├── insights.md   # 발견사항 (자동 생성)
+└── .state.json   # 플러그인 상태 (내부용)
 ```
 
-### 2. 템플릿 활용
+### 2. Mission 작성
 
-`templates/` 디렉토리에 각 파일의 템플릿이 있습니다. 복사해서 사용하세요:
+자동 생성된 `context.md` 파일을 열고 **Mission 섹션**을 작성하세요:
 
-```bash
-cp plugins/memory-loop/templates/* .memory/
+```markdown
+## Mission (불변)
+전체 컴포넌트를 TypeScript로 마이그레이션하고 타입 안전성 확보
 ```
 
 ### 3. 작업 중
